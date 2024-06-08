@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title> Owls</title>
+    <link href="/image/owls-favicon-color.png" rel="shortcut icon" />
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css2?family=Cookie&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap"
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" asp-append-version="true" href="~/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" asp-append-version="true" href="~/css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" asp-append-version="true" href="~/css/jquery-ui.min.css" type="text/css">
+    <link rel="stylesheet" asp-append-version="true" href="~/css/magnific-popup.css" type="text/css">
+    <link rel="stylesheet" asp-append-version="true" href="~/css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" asp-append-version="true" href="~/css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" asp-append-version="true" href="~/css/style.css" type="text/css">
+    <link rel="stylesheet" asp-append-version="true" href="~/css/auth.css" type="text/css">
+    <link rel="stylesheet" asp-append-version="true" href="~/css/checkout.css" type="text/css">
+
+</head>
+
+<body>
+    <partial name="SideMenu" />
+    <partial name="Navbar" />
+    @await RenderSectionAsync("Banner", required: false)
+
+    <div class="container">
+            @RenderBody()
+    </div>
+    <partial name="_Footer" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script asp-append-version="true" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>       
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script asp-append-version="true" src="~/js/jquery-3.3.1.min.js"></script>
+    <script asp-append-version="true" src="~/js/bootstrap.min.js"></script>
+
+    <script asp-append-version="true" src="~/js/jquery.magnific-popup.min.js"></script>
+    <script asp-append-version="true" src="~/js/jquery-ui.min.js"></script>
+    <script asp-append-version="true" src="~/js/mixitup.min.js"></script>
+
+    <script asp-append-version="true" src="~/js/jquery.countdown.min.js"></script>
+    <script asp-append-version="true" src="~/js/jquery.slicknav.js"></script>
+    <script asp-append-version="true" src="~/js/jquery.nicescroll.min.js"></script>
+
+    <script asp-append-version="true" src="~/js/main.js"></script>
+    <partial name="_ValidationScriptsPartial"/>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

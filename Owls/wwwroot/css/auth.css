@@ -1,0 +1,69 @@
+﻿
+
+.auth{
+    margin:20px auto;
+}
+
+    .auth h3{
+        margin-bottom:20px;
+    }
+    .auth h6 {
+        width :300px;
+        margin:4px;
+        font-size:14px;
+        color:black;
+        cursor:pointer;
+    }
+    .auth .regis {
+        font-size: 16px;
+        padding-top:12px;
+        border-top:1px solid #808080;
+        
+    }
+        .auth .regis a{
+            color:#041d50;
+            font-weight:500;
+            text-decoration:underline;
+        }
+
+        .auth h6:hover {
+            text-decoration: underline;
+        }
+        .auth form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+    .auth input {
+        width: 320px;
+        padding: 12px;
+        background-color: #f3f3f3;
+        border: 2px solid #f3f3f3;
+        transition: all linear ;
+        transition-duration : 0.2s;
+        border-radius:4px;
+        margin:6px 0;
+    }
+        .auth input:focus {
+            background-color: #ffffff;
+        }
+    .auth button {
+        background-color: black;
+        color: white;
+        border-radius: 4px;
+        border: 1px solid black;
+        padding: 14px 24px;
+        text-transform: uppercase;
+        font-size: small;
+        font-weight: 600;
+        text-shadow: 1px 2px 1px #59a6b0;
+        margin:4px;
+    }
+        .auth button:hover {
+            background-color: #191919;
+        }
+
+    .auth .field-validation-error{
+        font-size:small;
+    }

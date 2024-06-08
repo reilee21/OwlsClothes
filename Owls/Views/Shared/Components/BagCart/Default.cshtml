@@ -1,0 +1,19 @@
+﻿
+@{
+    var quan = ViewBag.BagCart;
+}
+<ul class="header__right__widget">
+    <li>
+        <a href="@Url.Action("Index","Cart")">
+            <span class="icon_bag_alt" style="font-size:22px"></span>
+            <div id="cartCount">
+                @if (quan > 0)
+                {
+                    <div class="tip">
+                        @quan
+                    </div>
+                }
+            </div>
+        </a>
+    </li>
+</ul>

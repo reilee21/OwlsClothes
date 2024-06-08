@@ -1,0 +1,152 @@
+﻿<script asp-append-version="true" src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+@{
+    var colors = ViewBag.Colors;
+    var priceRange = FilterValue.PriceTag;
+    
+}
+<div class="row filters">
+    <center>
+        <form asp-action=@ViewBag.Func asp-controller="Products"
+                    asp-route-query=@ViewBag.Query
+                    asp-route-page=1
+                     class="d-flex flex-wrap">
+            <div class="filter-section price col-lg-3 col-md-3 col-sm-6 mb-8 ">
+
+                <div class="dropdown-toggle" id="priceDropdownToggle" data-toggle="dropdown">
+                    @if(Model.Filter != null)
+                    {
+                        @if (Model.Filter?.PriceRange != null)
+                        {
+                            var selectedPriceRange = Model.Filter.PriceRange.ToString().Trim();
+                            @priceRange[selectedPriceRange]
+                        }
+                        else
+                        {
+                            @:Mức giá
+                        }
+                    }
+                   
+                </div>
+                <div class="dropdown-menu price" aria-labelledby="priceDropdownToggle">
+                    <div class="dropdown-item" data-value="">Mức giá</div>
+                    @foreach (var item in @priceRange)
+                    {
+                        <div class="dropdown-item" data-value="@item.Key">
+                            @item.Value
+                        </div>
+                    }
+                </div>
+
+                <input type="hidden" name="priceRange" class="selected-value" value="@((Model.Filter?.PriceRange ?? "").Trim())">
+
+            </div>
+
+            <div class="filter-section color col-lg-2 col-md-3 col-sm-6 mb-8  ">
+                <div class="dropdown-toggle" id="colorDropdownToggle" data-toggle="dropdown">
+                    @if (Model.Filter?.ColorId != null)
+                    {
+                        var colorName = "";
+                        foreach (var color in colors)
+                        {
+                            if (color.ColorId.ToString() == Model.Filter.ColorId.ToString().Trim())
+                            {
+                                colorName = color.ColorName.Trim();
+                                break;
+                            }
+                        }
+                        @colorName
+                    }
+                    else
+                    {
+                        @:Màu sắc
+                    }
+                </div>
+                <div class="dropdown-menu color" aria-labelledby="colorDropdownToggle">
+                    <div class="dropdown-item" data-value="">Màu sắc</div>
+                    @if (colors != null)
+                    {
+                        foreach (var color in colors)
+                        {
+                            <div class="dropdown-item" data-value="@color.ColorId">@color.ColorName</div>
+                        }
+                    }
+                </div>
+
+                <input type="hidden" name="colorId" class="selected-value" value="@((Model.Filter?.ColorId ?? "").Trim())">
+
+
+            </div>
+
+            <div class="filter-section sort col-lg-2 col-md-3 col-sm-6 mb-8 ">
+                <div class="dropdown-toggle" id="sortDropdownToggle" data-toggle="dropdown">
+                    @if (Model.Filter?.SortOrder != null)
+                    {
+
+                        if ("price_asc" == Model.Filter.SortOrder.ToString().Trim())
+                        {
+                            @: Giá tăng dần
+                        }
+                        else if ("price_desc" == Model.Filter.SortOrder.ToString().Trim())
+                        {
+                            @: Giá giảm dần
+                        }                        
+                    }
+                    else
+                    {
+                        @:Sắp xếp
+                    }
+                </div>
+                <div class="dropdown-menu sort" aria-labelledby="sortDropdownToggle">
+                    <div class="dropdown-item" data-value="">Mặc định</div>
+                    <div class="dropdown-item" data-value="price_asc">Giá tăng dần</div>
+                    <div class="dropdown-item" data-value="price_desc">Giá giảm dần</div>
+                </div>
+                <input type="hidden" name="sortOrder" class="selected-value" value="@((Model.Filter?.SortOrder ?? "").Trim())">
+
+
+            </div>
+
+            <div class="col-lg-2 col-md-4 col-sm-6 mb-8 d-flex align-items-end justify-content-center">
+                <button type="submit" class="btn btn-primary">Áp dụng</button>
+            </div>
+        </form>
+    </center>
+</div>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        function handleDropdown(dropdownToggleId, dropdownMenuClass) {
+            const dropdownToggle = document.getElementById(dropdownToggleId);
+            const dropdownMenu = document.querySelector(`.${dropdownMenuClass}`);
+
+            dropdownToggle.addEventListener("click", function () {
+                dropdownMenu.classList.toggle("show");
+            });
+
+            const dropdownItems = dropdownMenu.querySelectorAll(".dropdown-item");
+            dropdownItems.forEach(item => {
+                item.addEventListener("click", function () {
+                    const selectedValue = this.getAttribute("data-value");
+                    const selectedText = this.textContent;
+                    const selectedInput = dropdownMenu.parentNode.querySelector(".selected-value");
+                    selectedInput.value = selectedValue;
+                    dropdownMenu.classList.remove("show");
+                    dropdownToggle.textContent = selectedText;
+                });
+            });
+
+            window.addEventListener("click", function (event) {
+                if (!dropdownToggle.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                    dropdownMenu.classList.remove("show");
+                }
+            });
+        }
+
+        handleDropdown("priceDropdownToggle", "dropdown-menu.price");
+        handleDropdown("colorDropdownToggle", "dropdown-menu.color");
+        handleDropdown("sortDropdownToggle", "dropdown-menu.sort");
+    });
+</script>

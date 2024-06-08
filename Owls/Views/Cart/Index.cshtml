@@ -1,0 +1,120 @@
+﻿@model IEnumerable<CartItem>
+@{
+    var colors = ViewBag.Colors;
+    Dictionary<int, string> cl = new();
+    foreach(var i in colors)
+    {
+        cl.Add(i.ColorId, i.ColorName);
+    }
+    var totalp = ViewBag.Total;
+}
+@if (Model.Any())
+{  
+    <section class="shop-cart spad" id="shop-cart">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="shop__cart__table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Sản phẩm</th>
+                                <th>Giá</th>
+                                <th>Số lượng</th>
+                                <th>Tạm tính</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr id="row-@item.Sku">
+                                        <td class="cart__product__item" onclick="Details('@item.ProductName')">
+                                        <img src="@item.Image" alt="" width="150">
+                                        <div class="cart__product__item__title">
+                                            <h6>@item.ProductName</h6>
+                                            <div class="rating">
+                                                @if (!String.IsNullOrEmpty(item.Size))
+                                                {
+                                                    <span>[@item.Size]</span>
+                                                }
+                                                @if (item.Color != null)
+                                                {
+                                                    <span> | [@cl[(int)@item.Color]] </span>
+                                                }
+
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="cart__price">@Money.Cast((int)item.Price)</td>
+                                    <td id="price-@item.Sku" style="display:none">@item.Price</td>
+                                    <td class="cart__quantity">
+                                        <div class="pro-qtty">
+                                            <span class="qtty-desc" onclick="updateQuantity('@item.Sku',@item.StockQuantity,-1)" >-</span>
+                                            <input id="pro-qtty-input-@item.Sku" type="text" value="@item.Quantity" min="1" 
+                                                   onkeypress="return isNumberKey(event)"
+                                                   onchange="updateQuantity('@item.Sku',@item.StockQuantity)">
+                                            <span class="qtty-incr" onclick="updateQuantity('@item.Sku',@item.StockQuantity,1)" >+</span>
+
+                                        </div>
+                                    </td>
+                                    <td class="cart__total" id="cart-total-@item.Sku">
+                                        @{
+                                            var total = item.Price * item.Quantity;
+                                        }
+                                        @Money.Cast((int)total)
+                                    </td>
+                                    <td class="cart__close"><span class="icon_close" onclick="RemoveItem('@item.Sku')"></span></td>
+                                </tr>
+                            }                          
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-md-end" id="btnCheckOut">
+                <h3 id="totalp">Tổng tiền : @Money.Cast((int)totalp)</h3>
+            <div class="col-md-auto">
+                <a href="@Url.Action("Checkout","Cart")"> Thanh toán</a>
+            </div>
+        </div>
+    </div>
+ </section>
+}
+else
+{
+    <div class="container h-50 cart-empty">
+        <h3>
+            GIỎ HÀNG CỦA BẠN ĐANG TRỐNG
+
+        </h3>
+        <div class="row justify-content-md-center">            
+            <div class="col col-md-auto ">              
+                <a href="/" class="p-3 ">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                        <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+                    </svg>
+                   Mua hàng ngay
+                </a>
+            </div>
+        </div>
+    </div>
+}
+<div class="container h-50 cart-empty" id="cart-empty" style="display:none">
+    <h3>
+        GIỎ HÀNG CỦA BẠN ĐANG TRỐNG
+
+    </h3>
+    <div class="row justify-content-md-center">
+        <div class="col col-md-auto ">
+            <a href="/" class="p-3 ">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                    <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+                </svg>
+                Mua hàng ngay
+            </a>
+        </div>
+    </div>
+</div>
+
+<script src="~/js/cart.js"></script>

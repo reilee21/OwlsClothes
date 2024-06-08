@@ -1,0 +1,15 @@
+﻿@model ProductListVM
+
+<partial name="Filter"/>
+@if(Model.Products.Count() > 0)
+{
+	<div class="row">
+		@foreach (var product in Model.Products)
+		{
+			<partial name="_ProductCard" model="@product"/>
+		}
+	</div>
+	<partial name="Pagination" />
+}
+
+

@@ -1,0 +1,24 @@
+﻿@model RegisterModel
+
+
+<div class="container-sm auth">
+    <h3 class="text-uppercase text-center font-weight-normal">Đăng ký</h3>
+    <form asp-action="Register" asp-controller="Auth" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input placeholder="Họ tên" asp-for="FullName" />
+        <input placeholder="Tài khoản" asp-for="UserName" />
+        <span asp-validation-for="UserName" class="text-dark"></span>
+
+        <input placeholder="Email" asp-for="Email" />
+        <span asp-validation-for="Email" class="text-dark"></span>
+
+        <input placeholder="Mật khẩu" asp-for="Password" />
+        <span asp-validation-for="Password" class="text-dark"></span>
+        <input placeholder="Nhập lại mật khẩu" asp-for="ConfirmPassword" />
+        <span asp-validation-for="ConfirmPassword" class="text-dark"></span>
+        <button type="submit"> Đăng ký </button>
+        <div class="regis">Đã có tài khoản <a href="@Url.Action("Login","Auth")">Đăng nhập</a></div>
+
+    </form>
+
+</div>

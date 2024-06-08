@@ -1,0 +1,18 @@
+﻿@{
+	string func = ViewBag.Func?.ToString().Trim();
+	string prr = Model.Filter?.PriceRange;
+}
+
+
+
+
+<nav aria-label="...">
+
+	<div page-model="@Model.PagingInfo" page-action="@ViewBag.Func" page-classes-enabled="true"
+		 page-filter=@Model.Filter
+		 page-class="page-index"
+		 page-query="@ViewBag.Query"
+		 page-class-selected="active" class="pagination justify-content-center" id="client-pager">
+	</div>
+</nav>
+

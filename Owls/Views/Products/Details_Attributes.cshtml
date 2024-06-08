@@ -1,0 +1,116 @@
+﻿@{
+    var sizes = new List<string>() { "XS", "S", "M", "L", "XL" };
+    var prosizes = new List<string>();
+    var colors = new List<string>() {};
+    foreach (var item in Model.ProductVariants)
+    {
+        prosizes.Add(item.Size);
+        string cl = String.IsNullOrEmpty(item.ColorName) ? "Mặc định" : item.ColorName ;
+        
+        if (!colors.Contains(cl))
+        {
+            colors.Add(cl);
+        }
+    }    
+    var available_size = new List<string>();
+    foreach (var size in sizes)
+    {
+        if (prosizes.Contains("Size " + size))
+        {
+            available_size.Add(size);
+        }
+    }
+
+}
+
+<script src="~/js/proddetails.js"></script>
+
+<div class="product__details__text">
+    <h3>@Model.Name</h3>
+    <div class="product__details__price"><span id="dis_sale_price">@Money.Cast(Model.Price)</span> <span id="sale_price"></span></div>
+    <div class="product__details__button">
+        <div class="quantity">
+            <span>Số lượng:</span>
+            <div class="pro-qty">
+                <input type="text" id="inputquan" value="1" max="100" oninput="checkQuantity()" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;">
+            </div>
+        </div>
+        <a class="cart-btn" onclick="AddToCart()"><span class="icon_bag_alt"></span> Thêm vào giỏ hàng</a>
+
+    </div>
+    <div class="product__details__widget">
+        <ul>
+
+            <li>
+                @if (colors.Count() > 1)
+                {
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <span class="attri">Màu: </span>
+                        </div>
+                        <div class="col-lg-9">
+                            <div class="color__checkbox">
+                                @foreach (var color in colors)
+                                {
+                                    <label for="color-@color">
+                                        <input type="radio" id="color-@color" name="color" onchange="updateSelectedColor('@color')" value="@color" )>
+                                        <span>
+                                            @color
+                                        </span>
+                                    </label>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </li>
+            <li>
+                <div class="row">
+                    @if (available_size.Any() || Model.ProductVariants.Count>1)
+                    {
+                        <div class="col-lg-3">
+                            <span class="attri">Sizes:</span>
+                        </div>
+                    }                    
+                    <div class="col-lg-9">
+                        <div class="size__btn">
+                            @if (available_size.Any())
+                            {
+                                @foreach (var size in available_size)
+                                {
+                                    <label for="@size">
+                                        <input type="radio" id="@size" name="size" onclick="updateSelectedSize('@size')" value="@size" )>
+                                        <span>
+                                            @size
+                                        </span>
+                                    </label>
+                                }
+                            }
+                            else
+                            {
+                                @foreach (var item in Model.ProductVariants)
+                                {
+                                    <label for="@item.Size">    
+
+                                        <input type="radio" id="@item.Size" name="size" onclick="updateSelectedSize('@item.Size')" value="@item.Size" )>
+                                        <span>
+                                            @item.Size
+
+                                        </span>
+                                    </label>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+
+            </li>
+
+        </ul>
+    </div>
+</div>
+
+<script>
+    var productVariants = @Html.Raw(Json.Serialize(Model.ProductVariants));
+   
+</script>

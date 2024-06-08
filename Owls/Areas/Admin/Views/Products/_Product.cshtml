@@ -1,0 +1,42 @@
+﻿@model IEnumerable<Product>
+
+
+<tbody id="productsContainer">
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                <div class="d-flex px-2 py-1">
+                    <div>
+                        <img src="@item.Imagethumbnail" class="avatar avatar-sm me-3" alt="@item.Name">
+                    </div>
+                    <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm">@item.Name</h6>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <p class="text-xs font-weight-bold mb-0">@item.Category.Name</p>
+            </td>
+            <td class="align-middle text-center text-sm">
+                @if (item.IsActive == true)
+                {
+                    <span class="badge badge-sm bg-gradient-success">Đang bán</span>
+                }
+                else
+                {
+                    <span class="badge badge-sm bg-gradient-secondary">Không</span>
+                }
+            </td>
+            <td class="align-middle text-center">
+                <span class="text-secondary text-xs font-weight-bold">@item.CreateAt</span>
+            </td>
+            <td class="align-middle">
+                <a href="@Url.Action("Edit","Products",new{productId = item.ProductId,Area = "Admin"})" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit product">
+                    Edit
+                </a>
+            </td>
+        </tr>
+    }
+</tbody>
+    

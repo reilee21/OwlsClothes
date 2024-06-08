@@ -1,0 +1,69 @@
+﻿@model IEnumerable<Product>
+<link href="~/css/prod.css" rel="stylesheet" />
+
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header pb-0">
+                <h5 class="w-20">Sản phẩm</h5>
+                <form asp-area="Admin" asp-controller="Products" asp-action="Index" method="get" id="filterForm">
+                    <select name="cate" style="height:max-content" id="categoryFilter" onchange="handleChange()">
+                        <option value="">Tất cả danh mục</option>
+                        @foreach (var category in ViewBag.Categories)
+                        {
+                            var isSelected = category.CategoryId == ViewBag.SelectedCate;
+                            if (isSelected)
+                            {
+                                <option value="@category.CategoryId" selected>@category.Name</option>
+                            }
+                            else{
+                                <option value="@category.CategoryId">@category.Name</option>
+                            }
+                        }
+                    </select>
+                    <input  type="text" id="searchInput" name="search" value="@ViewBag.SearchString" placeholder="Tên sản phẩm...">
+
+                    <button class="btn btn-outline-primary btn-sm mb-0 " id="filterButton" type="submit">Tìm</button>
+                </form>
+              
+                <a class="btn bg-gradient-dark" href="@Url.Action("Create","Products",new{ Area = "Admin"})"><i class="fas fa-plus" aria-hidden="true"></i></a>
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+                <div class="table-responsive p-0">
+                    <table id="productsTable" class="table align-items-center mb-0">
+                        <thead>
+                            <tr>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sản phẩm</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Danh mục</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Trạng thái</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tạo lúc</th>
+                                <th class="text-secondary opacity-7"></th>
+                            </tr>
+                        </thead>
+                        @await Html.PartialAsync("_Product", Model)
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<nav aria-label="...">
+
+    <div page-model-admin="@ViewBag.Pager"  page-action="Index" page-classes-enabled="true"
+         page-search="@ViewBag.SearchString"
+         page-cate="@ViewBag.SelectedCate"
+         page-class="page-index"
+         page-class-selected="active" class="pagination justify-content-center" id="client-pager">
+    </div>
+</nav>
+
+
+
+
+<script>
+    function handleChange() {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('filterForm').submit();
+    }
+</script>

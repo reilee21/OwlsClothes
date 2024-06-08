@@ -1,0 +1,129 @@
+﻿<header class="header">
+    <div class="container-fluid">
+        <div class="row">
+            <a class="col-xl-3 col-lg-2 d-flex justify-content-center align-items-center" href="@Url.Action("Index", "Home")">
+                <div class="header__logo">
+                    <img src="/image/lg.png" alt="">
+                </div>
+            </a>
+
+            <div class="col-xl-5 col-lg-5">
+                <nav class="header__menu">
+                    <ul>
+                        <li><a href="@Url.Action("Index","Home")">Store</a></li>
+                        <li class="prod-cate-header" id="pro-cate-header">
+                            <a href="#">Sản phẩm</a>
+                            <ul class="dropdown product">
+                                <li>
+                                    <a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "tops" })">Tops</a>
+                                    <ul class="cate" id="cate">
+                                        <li><a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "t-shirts-polo-shirts" })">T-Shirts & Polos</a></li>
+                                        <li><a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "shirts" })">Shirts</a></li>
+                                        <li><a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "sweaters-cardigans" })">Sweaters & Cardigans</a></li>
+                                        <li><a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "sweatshirts-hoodies" })">Sweatshirts & Hoodies</a></li>
+                                        <li><a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "outwear" })">Outwear</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "bottoms" })">Bottoms</a>
+                                    <ul class="cate" id="cate">
+                                        <li><a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "pants" })">Pants</a></li>
+                                        <li><a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "shorts" })">Shorts</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "accessories" })">Accessories</a>
+                                    <ul class="cate" id="cate">
+                                        <li><a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "other-accessories" })">Other accessories</a></li>
+                                        <li><a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "caps-hats" })">Caps</a></li>
+                                        <li><a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "slides" })">Slides</a></li>
+                                        <li><a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "wallets" })">Wallets</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "bags" })">Bags</a>
+                                    <ul class="cate" id="cate">
+                                        <li><a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "backpacks" })">Backpacks</a></li>
+                                        <li><a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "crossbody-bags" })">Crossbody bags</a></li>
+                                        <li><a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "bowler-bags" })">Bowler bags</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+
+                        </li>
+                        <li class="pro-cate-sidebar" id="pro-cate-sidebar">
+                            <a href="#">Sản phẩm</a>
+                            <ul class="dropdown product">
+                                <li>
+                                    <a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "tops" })">Tops</a>
+                                    <ul>
+                                        <li><a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "t-shirts-polo-shirts" })">T-Shirts & Polos</a></li>
+                                        <li><a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "shirts" })">Shirts</a></li>
+                                        <li><a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "sweaters-cardigans" })">Sweaters & Cardigans</a></li>
+                                        <li><a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "sweatshirts-hoodies" })">Sweatshirts & Hoodies</a></li>
+                                        <li><a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "outwear" })">Outwear</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "bottoms" })">Bottoms</a>
+                                    <ul>
+                                        <li><a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "pants" })">Pants</a></li>
+                                        <li><a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "shorts" })">Shorts</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "accessories" })">Accessories</a>
+                                    <ul>
+                                        <li><a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "other-accessories" })">Other accessories</a></li>
+                                        <li><a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "caps-hats" })">Caps</a></li>
+                                        <li><a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "slides" })">Slides</a></li>
+                                        <li><a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "wallets" })">Wallets</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "bags" })">Bags</a>
+                                    <ul>
+                                        <li><a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "backpacks" })">Backpacks</a></li>
+                                        <li><a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "crossbody-bags" })">Crossbody bags</a></li>
+                                        <li><a href="@Url.Action("ProductsFilterByCategory", "Products", new { query = "bowler-bags" })">Bowler bags</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+
+                        </li>
+                        <li><a href="@Url.Action("About","Home")">About</a></li>
+                        <li><a href="@Url.Action("Contact","Home")">Contact</a></li>
+
+                    </ul>
+
+                </nav>
+
+
+            </div>
+            <div class="col-lg-3 search-bar">
+                <form method="post" asp-action="ProductsFilterByName" asp-controller="Products">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="query" id="searchString">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary search-btn"><i class="fa fa-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-lg-1">
+
+                <div class="header__right">
+                    <partial name="UserHeader"/>
+                    
+                    @await Component.InvokeAsync("BagCart")
+
+
+                </div>
+            </div>
+        </div>
+        <div class="canvas__open">
+            <i class="fa fa-bars"></i>
+        </div>
+    </div>
+</header>

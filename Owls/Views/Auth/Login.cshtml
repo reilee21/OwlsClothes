@@ -1,0 +1,17 @@
+﻿
+@model UserLogin
+
+<div class="container-sm auth">
+    <h3 class="text-uppercase text-center font-weight-normal">Đăng nhập</h3>
+    <form asp-action="Login" asp-controller="Auth" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input placeholder="Tài khoản" asp-for="Username"  />
+        <input placeholder="Mật khẩu" asp-for="Password" />
+
+        <h6><a>Quên mật khẩu? </a></h6>
+        <button type="submit"> Đăng nhập </button>
+        <div class="regis">Chưa có tài khoản <a href="@Url.Action("Register","Auth")">Đăng ký ngay?</a></div>
+
+    </form>
+
+</div>

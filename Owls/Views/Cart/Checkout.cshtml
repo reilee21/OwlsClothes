@@ -1,0 +1,121 @@
+﻿@model CheckOutModel
+@{
+    var colors = ViewBag.Colors;
+    Dictionary<int, string> cl = new();
+    foreach (var i in colors)
+    {
+        cl.Add(i.ColorId, i.ColorName);
+    }
+    var subtotal = ViewBag.SubTotal;
+}
+<script src="~/js/checkout.js"></script>
+
+<div class="container p-4 checkout">
+    <div class="row">
+        <div class="col-lg-6 col-md-12">
+            <div class="products">
+                @foreach(var item in Model.Carts)
+                {
+                    <div class="item row">
+                        <div class="col-3">
+                            <img src="@item.Image" class="img" alt="img" />
+                            <span>@item.Quantity</span>
+                        </div>
+                        <div class="col-9 row">
+                            <div class="col-12 name">@item.ProductName</div>
+                            <div class="col-12 row attribute">
+                                @if (!String.IsNullOrEmpty(item.Size))
+                                {
+                                     <div class="col-3">[@item.Size]</div>                                    
+                                }
+                                @if (item.Color != null)
+                                {
+                                    <div class="col-3">[@cl[(int)@item.Color]]</div>
+                                }
+                            </div>
+                            <div class="col-12 price">@item.Price</div>
+
+                        </div>
+                    </div>
+                }
+                
+            </div>
+        </div>
+        <form class="col-lg-6 col-md-12" asp-action="Checkout" asp-controller="Cart" method="post">
+            <div class="payment">
+                <div class="row">
+                    <div class="cus_name col-lg-6 col-12">
+                        <h6>Họ tên</h6>
+                        <input  asp-for="CutomerName" id="cus_name" type="text" />
+                    </div>
+                    <div class="cus_name col-lg-6 col-12">
+                        <h6>Số điện thoại</h6>
+                        <input asp-for="PhoneNumber" id="cus_phone" type="text" />
+                    </div>
+                    <div class="address-form col-12 row">
+                        <div class="col-12 col-lg-6">
+                            <select asp-for="City"
+                                    placeholder="Tỉnh/Thành phố"
+                                    id="province"
+                                    type="text"
+                                    onchange="updateShippingFee(this)"
+                            >
+                                <option value="invalid">Tỉnh/Thành phố</option>
+
+                            </select>
+                            <small></small>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <select asp-for="Dicstrict"
+                                placeholder="Quận/Huyện" id="district" type="text">
+                                <option value="invalid">Quận/Huyện</option>
+
+                            </select>
+                            <small></small>
+                        </div>
+                        <div class="col-12 col-lg-4">
+                            <select asp-for="Ward"
+                                placeholder="Phường/Xã" id="village" type="text">
+                                <option value="invalid">Phường/Xã</option>
+                            </select>
+                            <small></small>
+                        </div>
+                        <div class="col-12 col-lg-8">
+                            <input asp-for="Address" placeholder="Địa chỉ liên hệ" type="text" />
+                            <small></small>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <hr />
+                </div>
+                <div class="row subtotal">
+                    <h5 class="col-6">Tạm tính : </h5>
+                    <h6 class="col-6 font-weight-bold">@Money.Cast((int)subtotal) </h6>
+                    <h5 class="col-6">Phí vận chuyển : </h5>
+                    <h6 class="col-6 font-weight-bold" id="shipping-fee">123 </h6>
+                </div>
+                <div class="row">
+                    <hr/>
+                </div>
+                <div class="row total">
+                    <h5 class="col-6">Tổng cộng : </h5>
+                    <h6 class="col-6 font-weight-bold" id="totalprice"> --- </h6>
+                </div>
+                <div class="row">
+                    <button type="submit"> Thanh toán</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+<script>
+    var shipFee = @Html.Raw(Json.Serialize(ViewBag.ShippingFees));
+    var stt = @Html.Raw(Json.Serialize(ViewBag.SubTotal));
+</script>
+

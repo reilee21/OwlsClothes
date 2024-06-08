@@ -1,0 +1,9 @@
+﻿<div class="banner">
+    <div class="home-slider owl-carousel js-fullheight">
+        @foreach (var imageUrl in ViewBag.ImageUrls)
+        {
+            <div class="slider-item js-fullheight" style="background-image:url('@Url.Content(imageUrl)'); height: fit-content;">
+            </div>
+        }
+    </div>
+</div>

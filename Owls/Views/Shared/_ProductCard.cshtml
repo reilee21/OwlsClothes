@@ -1,0 +1,23 @@
+﻿@model ProductBaseInformation 
+
+<div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
+	<div class="single-product mb-20">
+		<div class="product-img img-full ">
+			<a href="@Url.Action("ProductDetails","Products",new{proName = Model.Name})" title="@Model.Name">
+				<img class="lazyload" src="@Model.Imagethumbnail" alt="@Model.Name">
+			</a>
+		</div>
+		<div class="product-content">
+			<h3><a href="@Url.Action("ProductDetails","Products",new{ proName = Model.Name})" title="@Model.Name">@Model.Name</a></h3>
+			<div class="product-price">
+				<div class="price-box">
+					<center>
+						<span class="regular-price">@Money.Cast(Model.Price)</span>
+
+					</center>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>

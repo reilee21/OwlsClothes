@@ -1,0 +1,140 @@
+﻿@model ProductWrite
+@{
+    var colors = ViewBag.Colors;
+    var colorsJson = Newtonsoft.Json.JsonConvert.SerializeObject(colors);
+
+}
+<link asp-append-version="true" href="~/css/prod.css" rel="stylesheet" />
+
+<div class="row justify-content-between">
+    <h2 class="col-10 text-center w-30"> Thêm sản phẩm mới</h2>
+    <button type="submit" class=" col-1 btn btn-primary" form="form-create">Thêm</button>
+
+</div>
+
+<form id="form-create"  method="post" asp-area="Admin" asp-controller="Products" asp-action="Create" enctype="multipart/form-data">
+    <div class="bg-white shadow-blur border-radius-xl p-4">
+        <div class="row">
+            <div class="form-group col-lg-6 col-12">
+                <label>Tên sản phẩm</label>
+                <input asp-for="@Model.Name" class="form-control" />
+                <span asp-validation-for="@Model.Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group col-lg-6 col-12">
+                <label> Danh mục</label>
+                <select class="form-control" asp-for="@Model.CategoryId" style="height:max-content">
+                    <option value=""></option>
+                    @foreach (var category in ViewBag.Categories)
+                    {
+                        <option value="@category.CategoryId">@category.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="@Model.CategoryId" class="text-danger"></span>
+
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label> Mô tả</label>
+            <textarea asp-for="@Model.Description" class="form-control" id="description"></textarea>
+
+            <span asp-validation-for="@Model.Description" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label>Ảnh </label>
+            <input id="pro-img" asp-for="Images" type="file" class="form-control" multiple onchange="previewImages()" />
+            <span asp-validation-for="@Model.Images" class="text-danger"></span>
+
+        </div>
+        <div id="imagePreview" class="d-flex flex-wrap"></div>
+    </div>
+    <div class="bg-white shadow-blur border-radius-xl p-4 mt-2 ">
+        <h3>Thuộc tính của sản phẩm</h3>
+
+        <div id="variants">
+            @for (int i = 0; i < Model.Varriants.Count; i++)
+            {
+                <div class="variant">
+                    <h4>Thuộc tính @(i + 1)</h4>
+                    <div class="row">
+                        <div class="form-group col-12 col-lg-4">
+                            <label> SKU</label>
+                            <input asp-for="Varriants[i].Sku" class="form-control" />
+                            <span asp-validation-for="Varriants[i].Sku" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-12 col-lg-4">
+                            <label> Size</label>
+                            <input asp-for="Varriants[i].Size" class="form-control" />
+                            <span asp-validation-for="Varriants[i].Size" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-12 col-lg-4">
+                            <label > Màu</label>
+                            <select class="form-control" asp-for="Varriants[i].ColorId" style="height:max-content">
+                                <option value=""></option>
+                                @foreach (var color in ViewBag.Colors)
+                                {
+                                    <option value="@color.ColorId">@color.ColorName</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-12 col-lg-4">
+                            <label > Giá </label>
+                            <input asp-for="Varriants[i].Cost" class="form-control" type="number"/>
+                            <span asp-validation-for="Varriants[i].Cost" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group col-12 col-lg-4">
+                            <label > Giá bán</label>
+                            <input asp-for="Varriants[i].SalePrice" class="form-control" type="number" />
+                            <span asp-validation-for="Varriants[i].SalePrice" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-12 col-lg-4">
+                            <label> Số lượng</label>
+                            <input asp-for="Varriants[i].Quantity" class="form-control" />
+                            <span asp-validation-for="Varriants[i].Quantity" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-danger" onclick="removeVariant(this)">Xóa</button>
+
+                </div>
+            }
+        </div>
+    <button class="btn bg-gradient-dark" type="button" onclick="addVariant()">Add Variant</button>
+    </div>
+
+
+
+</form>
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+
+<script>
+    var colors = @Html.Raw(colorsJson);
+</script>
+<script src="~/js/proadmin.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", (event) => {
+        ClassicEditor.create(document.querySelector('#description'))
+            .catch(error => {
+                console.error(error);
+            });
+           
+    });
+
+</script>
+
+<script>
+    function removeVariant(button) {
+
+        var variantDiv = button.closest('.variant');
+        variantDiv.remove();
+    }
+</script>

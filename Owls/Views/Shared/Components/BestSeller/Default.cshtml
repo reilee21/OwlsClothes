@@ -1,0 +1,13 @@
+﻿@model IEnumerable<Owls.DTOs.ProductBaseInformation> 
+
+<div class="title-1">
+	<center>
+		<h4>BEST SELLER</h4>
+	</center>
+</div>
+<div class="row homepro">
+	@foreach (var product in Model)
+	{
+		<partial name="_ProductCard" model="@product" />
+	}
+</div>
