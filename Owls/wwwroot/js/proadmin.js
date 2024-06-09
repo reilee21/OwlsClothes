@@ -1,30 +1,32 @@
 ﻿
 function previewImages() {
-    var preview = document.getElementById('imagePreview');
-    preview.innerHTML = '';
-    var files = document.getElementById('pro-img').files;
-    if (files) {
-        var filesArray = Array.from(files);
-        filesArray.sort(function (a, b) {
-            return a.name.localeCompare(b.name);
-        });
-        filesArray.forEach.call(files, function (file) {
-            var reader = new FileReader();
-            reader.onload = function (event) {
-                var img = document.createElement('img');
-                img.src = event.target.result;
-                img.title = file.name;
-                img.style.maxWidth = '150px';
-                img.style.margin = '10px';
-                img.style.padding = '8px';
-                preview.appendChild(img);
-            };
-            reader.readAsDataURL(file);
-        });
-    }
+    const imagePreview = document.getElementById('imagePreview');
+    const input = document.getElementById('pro-img');
+    imagePreview.innerHTML = '';
+    const files = Array.from(input.files);
+
+    files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const imgElement = document.createElement('div');
+            imgElement.classList.add('image-container');
+            imgElement.innerHTML = `<img src="${e.target.result}" class="img-thumbnail" style="margin: 5px; width: 100px; height: 100px;"><span class="image-name" style="display:none;">${file.name}</span>`;
+            imagePreview.appendChild(imgElement);
+        };
+        reader.readAsDataURL(file);
+    });
+
+    new Sortable(imagePreview, {
+        animation: 150,
+        onEnd: updateOrder
+    });
     document.getElementById('old_img').remove();
 }
-
+function updateOrder() {
+    const imageContainers = document.querySelectorAll('#imagePreview .image-container');
+    const order = Array.from(imageContainers).map(container => container.querySelector('.image-name').innerText);
+    document.getElementById('ImagesOrder').value = JSON.stringify(order);
+}
 function addVariant() {
     var variantsDiv = document.getElementById('variants');
     var index = variantsDiv.children.length;

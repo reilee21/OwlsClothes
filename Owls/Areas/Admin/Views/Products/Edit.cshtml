@@ -7,13 +7,21 @@
 <link asp-append-version="true" href="~/css/prod.css" rel="stylesheet" />
 
 <div class="row justify-content-between">
-    <h4 class="col-10 text-center "> @Model.Name</h4>
-    <button type="submit" class=" col-1 btn btn-primary" form="form-create">Lưu</button>
+    <a class="btn btn-link text-danger text-gradient px-3 mb-0 col-1" 
+        onclick="DeletePro(@Model.ProductId)">
+        <i class="far fa-trash-alt me-2" aria-hidden="true"></i>Xoá
+    </a>    
 
+    <h4 class="col-9 text-center "> @Model.Name</h4>
+    <button type="submit" class=" col-1 btn btn-primary" form="form-edit">Lưu</button>
 </div>
 
-<form id="form-create" method="post" asp-area="Admin" asp-controller="Products" asp-action="Create" enctype="multipart/form-data">
+<form id="form-edit" method="post" asp-area="Admin" asp-controller="Products" asp-action="Edit" enctype="multipart/form-data">
     <div class="bg-white shadow-blur border-radius-xl p-4">
+        @if (ViewBag.Errors != null)
+        {
+            <span class="text-danger">@ViewBag.Errors</span>
+        }
         <div class="row">
             <div class="form-group col-lg-6 col-12">
                 <label>Tên sản phẩm</label>
@@ -175,5 +183,27 @@
         } else {
             variantDiv.remove();
         }
+    }
+</script>
+<script>
+    function DeletePro(id) {
+        $.ajax({
+            url: 'Delete', 
+            type: 'POST',
+            data: { productId: id },
+            success: function (response) {
+                if (response.redirectToUrl) {
+                    alert("Xoá thành công");
+
+                    window.location.href = response.redirectToUrl;
+                } 
+            },
+            error: function (jqXHR) {
+                if (jqXHR.status === 400) {
+                    var errorMessage = jqXHR.responseJSON.message;
+                    alert(errorMessage); 
+                } 
+            }
+        });
     }
 </script>

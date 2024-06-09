@@ -2,7 +2,7 @@
 
 namespace Owls.Services.Firebase
 {
-    public class FirebaseStorageService:IFirebaseStorage
+    public class FirebaseStorageService : IFirebaseStorage
     {
         private readonly IConfiguration configuration;
         private readonly FirebaseStorage firebaseStorage;
@@ -29,6 +29,13 @@ namespace Owls.Services.Firebase
                 .Child("images")
                 .Child(imageName)
                 .GetDownloadUrlAsync();
+        }
+        public async Task RemoveImageAsync(string imageName)
+        {
+            await firebaseStorage
+                .Child("images")
+                .Child(imageName)
+                .DeleteAsync();
         }
     }
 }

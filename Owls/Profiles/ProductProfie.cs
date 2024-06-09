@@ -5,21 +5,21 @@ using Owls.Models;
 
 namespace Owls.Profiles
 {
-	public class ProductProfie : Profile
-	{
-		public ProductProfie()
-		{
-			CreateMap<Product, ProductBaseInformation>()
-					   .ForMember(dest => dest.TotalQuantity, opt => opt.MapFrom(src => src.ProductVariants.Sum(pv => pv.Quantity)))
-					   .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.ProductVariants.Min(pv => pv.SalePrice)));
+    public class ProductProfie : Profile
+    {
+        public ProductProfie()
+        {
+            CreateMap<Product, ProductBaseInformation>()
+                       .ForMember(dest => dest.TotalQuantity, opt => opt.MapFrom(src => src.ProductVariants.Sum(pv => pv.Quantity)))
+                       .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.ProductVariants.Min(pv => pv.SalePrice)));
 
-			CreateMap<Product, ProductReadVM>()
-					   .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.ProductImages.Select(pi => pi.Name)))
+            CreateMap<Product, ProductReadVM>()
+                       .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.ProductImages.Select(pi => pi.Name)))
                        .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.ProductVariants.Min(pv => pv.SalePrice)))
-					   .ReverseMap();
-			CreateMap<Product, ProductWrite>()
-					   .ForMember(dest => dest.ImagesDisplay, opt => opt.MapFrom(src => src.ProductImages.Select(pi => pi.Name)))
-					   .ForMember(dest => dest.Varriants, opt => opt.MapFrom(src => src.ProductVariants));
+                       .ReverseMap();
+            CreateMap<Product, ProductWrite>()
+                       .ForMember(dest => dest.ImagesDisplay, opt => opt.MapFrom(src => src.ProductImages.Select(pi => pi.Name)))
+                       .ForMember(dest => dest.Varriants, opt => opt.MapFrom(src => src.ProductVariants)).ReverseMap();
 
 
 

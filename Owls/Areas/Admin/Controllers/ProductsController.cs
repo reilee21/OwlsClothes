@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Owls.DTOs;
 using Owls.DTOs.Write;
@@ -37,13 +38,15 @@ namespace Owls.Areas.Admin.Controllers
                 rs = await _storeContext.Products.Include(c => c.Category)
                  .Where(p => p.Name.ToLower().Contains(search.ToLower()))
                  .ToListAsync();
-            } else if (cate != null)
+            }
+            else if (cate != null)
             {
                 rs = await _storeContext.Products.Include(c => c.Category)
                  .Where(p => p.CategoryId.Equals(cate) || p.Category.ParentCate.Equals(cate))
                  .ToListAsync();
             }
-            else {
+            else
+            {
                 rs = await _storeContext.Products.Include(c => c.Category).ToListAsync();
 
             }
@@ -85,9 +88,67 @@ namespace Owls.Areas.Admin.Controllers
             ViewBag.Categories = cate;
             ViewBag.Colors = colors;
             ViewBag.Nav = "Products";
+            if (pro.ImagesOrder.Any())
+            {
+                pro.ImagesOrder = System.Text.Json.JsonSerializer.Deserialize<List<string>>(pro.ImagesOrder[0]);
+            }
+
             if (ModelState.IsValid)
             {
-                return View(new ProductWrite());
+                for (int i = 0; i < pro.Varriants.Count; i++)
+                {
+                    var v = pro.Varriants[i];
+                    for (int j = 1; j < pro.Varriants.Count; j++)
+                    {
+                        if (v.Sku.Equals(pro.Varriants[j].Sku))
+                            ViewBag.Errors = "Trùng mã SKU: " + v.Sku;
+                        return View(pro);
+                    }
+
+                    if (await ExistSKU(v.Sku))
+                    {
+                        ViewBag.Errors = "Trùng mã SKU: " + v.Sku;
+                        return View(pro);
+                    }
+
+                }
+
+                Product product = mapper.Map<Product>(pro);
+                product.CreateAt = DateTime.Now;
+
+                try
+                {
+                    _storeContext.Products.Add(product);
+                    await _storeContext.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    return View(pro);
+                }
+
+                foreach (var v in pro.Varriants)
+                {
+                    ProductVariant pv = mapper.Map<ProductVariant>(v);
+                    pv.ProductId = product.ProductId;
+                    _storeContext.ProductVariants.AsNoTracking().Append(pv);
+                }
+
+                List<string> image = await UploadImage(pro.Images, pro.ImagesOrder, product.ProductId);
+                foreach (string i in image)
+                {
+                    ProductImage pi = new ProductImage()
+                    {
+                        Name = i,
+                        ProductId = product.ProductId
+                    };
+                    _storeContext.ProductImages.Add(pi);
+                    await _storeContext.SaveChangesAsync();
+                }
+                product.Imagethumbnail = product.ProductId.ToString() + "_0.jpg";
+                _storeContext.Entry(product).State = EntityState.Modified;
+                await _storeContext.SaveChangesAsync();
+
+                return RedirectToAction("Edit", new { productId = product.ProductId });
             }
             return View(pro);
         }
@@ -122,9 +183,48 @@ namespace Owls.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> Delete(int productId)
+        {
+            using var transaction = await _storeContext.Database.BeginTransactionAsync();
+            try
+            {
+                var product = await _storeContext.Products
+                    .Include(p => p.ProductVariants)
+                    .Include(p => p.ProductImages)
+                    .FirstOrDefaultAsync(p => p.ProductId == productId);
+
+                if (product == null)
+                {
+                    return BadRequest(new { message = "Không thể xoá. Hãy chuyển sang ngừng bán" });
+                }
+
+                _storeContext.ProductVariants.RemoveRange(product.ProductVariants);
+
+                foreach (var item in product.ProductImages)
+                {
+                    await firebaseStorage.RemoveImageAsync(item.Name);
+                }
+
+                _storeContext.ProductImages.RemoveRange(product.ProductImages);
+
+                _storeContext.Products.Remove(product);
+
+                await _storeContext.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+
+                return Ok(new { redirectToUrl = Url.Action("Index") });
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return BadRequest(new { message = "Không thể xoá. Hãy chuyển sang ngừng bán" });
+            }
+        }
+        [HttpPost]
         public async Task<IActionResult> RemoveVariant(string? sku)
         {
-            if(string.IsNullOrEmpty(sku) ) return NotFound();
+            if (string.IsNullOrEmpty(sku)) return NotFound();
 
             ProductVariant variant = await _storeContext.ProductVariants.FindAsync(sku);
             if (variant == null) return NotFound();
@@ -132,11 +232,62 @@ namespace Owls.Areas.Admin.Controllers
             {
                 _storeContext.ProductVariants.Remove(variant);
                 await _storeContext.SaveChangesAsync();
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return BadRequest();
             }
             return Ok();
+        }
+
+        private async Task<List<string>> UploadImage(List<IFormFile> f, List<string> fOrder, int proId)
+        {
+            List<string> rs = new List<string>();
+            if (!fOrder.Any())
+            {
+                for (int i = 0; i < f.Count; i++)
+                {
+                    if (f[i].Length > 0)
+                    {
+                        using (var stream = new MemoryStream())
+                        {
+                            await f[i].CopyToAsync(stream);
+                            stream.Position = 0;
+                            string fileName = proId.ToString() + "_" + i.ToString() + ".jpg";
+                            var image = await firebaseStorage.UploadImageAsync(stream, fileName);
+                            rs.Add(fileName);
+                        }
+                    }
+                }
+                return rs;
+            }
+            foreach (var file in f)
+            {
+                if (file.Length > 0)
+                {
+                    using (var stream = new MemoryStream())
+                    {
+                        await file.CopyToAsync(stream);
+                        stream.Position = 0;
+                        string fileName = Path.GetFileName(file.FileName);
+
+                        for (int i = 0; i < fOrder.Count; i++)
+                        {
+                            if (fOrder[i].Equals(fileName))
+                                fileName = proId.ToString() + "_" + i.ToString() + ".jpg";
+                        }
+                        var image = await firebaseStorage.UploadImageAsync(stream, fileName);
+                        rs.Add(fileName);
+                    }
+                }
+            }
+            return rs;
+        }
+
+        private async Task<bool> ExistSKU(string sku)
+        {
+            var rs = await _storeContext.ProductVariants.FindAsync(sku);
+            return rs != null;
         }
 
     }

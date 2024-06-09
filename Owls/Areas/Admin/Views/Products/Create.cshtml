@@ -43,13 +43,23 @@
             <span asp-validation-for="@Model.Description" class="text-danger"></span>
         </div>
 
+    @*     <div class="form-group">
+            <label>Ảnh </label>
+            <input id="pro-img" asp-for="Images" type="file" class="form-control" multiple onchange="previewImages()" />
+            <span asp-validation-for="@Model.Images" class="text-danger"></span>
+        </div>
+        <div id="imagePreview" class="d-flex flex-wrap"></div>
+ *@
+
         <div class="form-group">
             <label>Ảnh </label>
             <input id="pro-img" asp-for="Images" type="file" class="form-control" multiple onchange="previewImages()" />
             <span asp-validation-for="@Model.Images" class="text-danger"></span>
-
         </div>
         <div id="imagePreview" class="d-flex flex-wrap"></div>
+        <input type="hidden" id="ImagesOrder" asp-for="ImagesOrder" />
+
+
     </div>
     <div class="bg-white shadow-blur border-radius-xl p-4 mt-2 ">
         <h3>Thuộc tính của sản phẩm</h3>
@@ -114,6 +124,7 @@
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
 
 <script>
     var colors = @Html.Raw(colorsJson);
