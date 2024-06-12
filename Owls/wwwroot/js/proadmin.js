@@ -83,7 +83,7 @@ function addVariant() {
                             <span class="text-danger field-validation-valid" data-valmsg-for="Varriants[${index}].Quantity" data-valmsg-replace="true"></span>
                         </div>
                     </div>
-                 <button type="button" class="btn btn-danger" onclick="removeVariant(this)">Xóa</button>
+                 <button type="button" class="btn btn-outline-danger" onclick="removeVariant(this)">Xóa</button>
                 </div>
     `;
     variantsDiv.insertAdjacentHTML('beforeend', newVariant);

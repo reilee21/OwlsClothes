@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -28,8 +27,12 @@ namespace Owls.Infrastructure
         public string PageClass { get; set; } = String.Empty;
         public string PageClassNormal { get; set; } = String.Empty;
         public string PageClassSelected { get; set; } = String.Empty;
-        public string PageSearch{ get; set; } = String.Empty;
+        public string PageSearch { get; set; } = String.Empty;
         public int? PageCate { get; set; }
+        public DateTime? PageFrom { get; set; }
+        public DateTime? PageTo { get; set; }
+
+
         public override void Process(TagHelperContext context,
         TagHelperOutput output)
         {
@@ -42,10 +45,12 @@ namespace Owls.Infrastructure
                     TagBuilder tag = new TagBuilder("a");
                     tag.Attributes["href"] = urlHelper.Action(PageAction, new
                     {
-                        Area="Admin",
+                        Area = "Admin",
                         page = i,
-                        cate=PageCate,
-                        search=PageSearch,
+                        cate = PageCate,
+                        search = PageSearch,
+                        from = PageFrom,
+                        to = PageTo,
                     });
 
                     if (PageClassesEnabled)

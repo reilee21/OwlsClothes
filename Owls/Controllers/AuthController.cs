@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Owls.DTOs;
+using Owls.DTOs.Write;
+using Owls.Helper;
 using Owls.Models;
 
 namespace Owls.Controllers
@@ -55,7 +57,8 @@ namespace Owls.Controllers
                     UserName = model.UserName,
                     Email = model.Email,
                     FullName = model.FullName,
-                    Address = ""
+                    Address = "",
+                    EmailConfirmed = true
                 };
 
                 var result = await _userManager.CreateAsync(user, model.Password);
@@ -82,8 +85,32 @@ namespace Owls.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        public async Task<IActionResult> UpdateProfile(UserProfile profile)
+        {
+            LocationService location = new LocationService();
+            await location.InitializeAsync();
+            profile.Ward = location.GetWardName(profile.City, profile.Dicstrict, profile.Ward);
+            profile.Dicstrict = location.GetDistrictName(profile.City, profile.Dicstrict);
+            profile.City = location.GetCityName(profile.City);
 
-
+            OwlsUser u = await _userManager.FindByIdAsync(profile.Id);
+            if (u == null)
+            {
+                return NotFound("User not found");
+            }
+            u.FullName = profile.FullName;
+            u.PhoneNumber = profile.PhoneNumber;
+            u.City = profile.City;
+            u.Dicstrict = profile.Dicstrict;
+            u.Ward = profile.Ward;
+            u.Address = profile.Address;
+            var rs = await _userManager.UpdateAsync(u);
+            if (!rs.Succeeded)
+            {
+                return BadRequest(rs.Errors);
+            }
+            return Ok(rs);
+        }
 
     }
 }

@@ -88,7 +88,7 @@ namespace Owls.Areas.Admin.Controllers
             ViewBag.Categories = cate;
             ViewBag.Colors = colors;
             ViewBag.Nav = "Products";
-            if (pro.ImagesOrder.Any())
+            if (pro.ImagesOrder.Any() && pro.ImagesOrder[0] != null)
             {
                 pro.ImagesOrder = System.Text.Json.JsonSerializer.Deserialize<List<string>>(pro.ImagesOrder[0]);
             }
@@ -98,11 +98,13 @@ namespace Owls.Areas.Admin.Controllers
                 for (int i = 0; i < pro.Varriants.Count; i++)
                 {
                     var v = pro.Varriants[i];
-                    for (int j = 1; j < pro.Varriants.Count; j++)
+                    for (int j = i + 1; j < pro.Varriants.Count; j++)
                     {
                         if (v.Sku.Equals(pro.Varriants[j].Sku))
+                        {
                             ViewBag.Errors = "Trùng mã SKU: " + v.Sku;
-                        return View(pro);
+                            return View(pro);
+                        }
                     }
 
                     if (await ExistSKU(v.Sku))
@@ -181,6 +183,88 @@ namespace Owls.Areas.Admin.Controllers
             return View(proWrite);
 
         }
+        [HttpPost]
+        public async Task<IActionResult> Edit(ProductWrite pro)
+        {
+            string er = "";
+            if (!string.IsNullOrEmpty(pro.Varriants[0].Sku))
+            {
+                for (int i = 0; i < pro.Varriants.Count; i++)
+                {
+                    var v = pro.Varriants[i];
+                    for (int j = i + 1; j < pro.Varriants.Count; j++)
+                    {
+                        if (v.Sku.Equals(pro.Varriants[j].Sku))
+                        {
+                            er = "Trùng mã SKU: " + v.Sku;
+                            return await RedirectEdit((int)pro.ProductId, er);
+                        }
+                    }
+                    v.ProductId = pro.ProductId;
+                    ProductVariant prv = await _storeContext.ProductVariants.FindAsync(v.Sku);
+                    if (prv != null)
+                    {
+                        ProductVariant updatedVariant = mapper.Map<ProductVariant>(v);
+                        _storeContext.Entry(prv).CurrentValues.SetValues(updatedVariant);
+                    }
+                    else
+                    {
+                        ProductVariant newVariant = mapper.Map<ProductVariant>(v);
+                        bool c = await ExistSKU(newVariant.Sku);
+                        if (c)
+                        {
+                            er = "Trùng mã SKU: " + newVariant.Sku;
+                            return await RedirectEdit((int)pro.ProductId, er);
+                        }
+                        _storeContext.ProductVariants.Add(newVariant);
+                        await _storeContext.SaveChangesAsync();
+
+                    }
+                }
+            }
+
+
+            if (pro.Images != null)
+            {
+                if (pro.ImagesOrder.Any() && pro.ImagesOrder[0] != null)
+                {
+                    pro.ImagesOrder = System.Text.Json.JsonSerializer.Deserialize<List<string>>(pro.ImagesOrder[0]);
+                }
+                var old_img = _storeContext.ProductImages.Where(i => i.ProductId.Equals(pro.ProductId));
+                foreach (var img in old_img)
+                {
+                    await firebaseStorage.RemoveImageAsync(img.Name);
+                }
+                _storeContext.RemoveRange(old_img);
+                await _storeContext.SaveChangesAsync();
+                List<string> image = await UploadImage(pro.Images, pro.ImagesOrder, (int)pro.ProductId);
+                foreach (string i in image)
+                {
+                    ProductImage pi = new ProductImage()
+                    {
+                        Name = i,
+                        ProductId = pro.ProductId
+                    };
+                    _storeContext.ProductImages.Add(pi);
+                    await _storeContext.SaveChangesAsync();
+                }
+            }
+            Product pr = await _storeContext.Products.FindAsync(pro.ProductId);
+            pr.Name = pro.Name;
+            pr.CategoryId = pro.CategoryId;
+            pr.Description = pro.Description;
+            if (!string.IsNullOrEmpty(pro.Varriants[0].Sku) && pro.IsActive)
+                pr.IsActive = pro.IsActive;
+            else
+            {
+                pr.IsActive = false;
+            }
+            _storeContext.Entry(pr).State = EntityState.Modified;
+            await _storeContext.SaveChangesAsync();
+
+
+            return RedirectToAction("Edit", new { productId = pro.ProductId });
+        }
 
         [HttpPost]
         public async Task<IActionResult> Delete(int productId)
@@ -238,6 +322,33 @@ namespace Owls.Areas.Admin.Controllers
                 return BadRequest();
             }
             return Ok();
+        }
+
+        private async Task<IActionResult> RedirectEdit(int proId, string errorMessage)
+        {
+
+
+            Product pro = await _storeContext.Products
+                                            .Include(p => p.ProductVariants)
+                                            .Include(p => p.ProductImages)
+                                            .FirstOrDefaultAsync(p => p.ProductId.Equals(proId));
+            var cate = await _storeContext.Categories.ToListAsync();
+            var colors = await _storeContext.Colors.Select(c => new { c.ColorId, c.ColorName }).ToListAsync();
+            ProductWrite proWrite = mapper.Map<ProductWrite>(pro);
+
+            for (int i = 0; i < proWrite.ImagesDisplay.Count; i++)
+            {
+                string img = proWrite.ImagesDisplay[i];
+                if (!string.IsNullOrEmpty(img))
+                {
+                    proWrite.ImagesDisplay[i] = await firebaseStorage.GetImageStreamAsync(img);
+                }
+            }
+            ViewBag.Nav = "Products";
+            ViewBag.Categories = cate;
+            ViewBag.Colors = colors;
+            ViewBag.Errors = errorMessage;
+            return View("Edit", proWrite);
         }
 
         private async Task<List<string>> UploadImage(List<IFormFile> f, List<string> fOrder, int proId)

@@ -17,7 +17,7 @@
         </a>
     </div>
     <hr class="horizontal dark mt-0">
-    <div class="collapse navbar-collapse  w-auto  max-height-vh-100 " id="sidenav-collapse-main">
+    <div class="collapse navbar-collapse  w-auto  max-height-vh-100  h-75 " id="sidenav-collapse-main">
         <ul class="navbar-nav">
             @if (User.IsInRole("admin"))
             {
@@ -64,7 +64,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link @(ViewBag.Nav == "Orders" ? "active" : "")" ">
+                <a class="nav-link @(ViewBag.Nav == "Orders" ? "active" : "")" href="@Url.Action("Index","Orders",new{Area = "Admin"})">
                     <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                         <svg width="12px" height="12px" viewBox="0 0 42 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                             <title>box-3d-50</title>
@@ -85,7 +85,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link @(ViewBag.Nav == "Others" ? "active" : "")" ">
+                <a class="nav-link @(ViewBag.Nav == "Others" ? "active" : "")" href="@Url.Action("Index","Others",new{Area = "Admin"})">
                     <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                         <svg width="12px" height="12px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                             <title>others</title>
@@ -106,7 +106,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link @(ViewBag.Nav == "Accounts" ? "active" : "")" ">
+                <a class="nav-link @(ViewBag.Nav == "Accounts" ? "active" : "")" href="@Url.Action("Index","Accounts",new{Area = "Admin"})">
                     <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                         <svg width="12px" height="12px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                             <title>document</title>
@@ -122,14 +122,14 @@
                             </g>
                         </svg>
                     </div>
-                    <span class="nav-link-text ms-1">Accounts</span>
+                    <span class="nav-link-text ms-1">Tài khoản</span>
                 </a>
             </li>
             <li class="nav-item mt-3">
-                <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Tài khoản</h6>
+                <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Tài khoản cá nhân</h6>
             </li>
             <li class="nav-item">
-                <a class="nav-link  @(ViewBag.Nav == "Profile" ? "active" : "")" " href="../pages/profile.html">
+                <a class="nav-link  @(ViewBag.Nav == "Profile" ? "active" : "")"  href="@Url.Action("Index","User",new{Area = "Admin"})">
                     <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                         <svg width="12px" height="12px" viewBox="0 0 46 42" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                             <title>customer-support</title>
@@ -146,11 +146,16 @@
                             </g>
                         </svg>
                     </div>
-                    <span class="nav-link-text ms-1">Profile</span>
+                    <span class="nav-link-text ms-1">@fullName</span>
                 </a>
             </li>
-
+            <li class="nav-item" style="padding:8px 16px;margin:auto">
+                   
+            </li>
         </ul>
     </div>
-
+    <div class="sidenav-footer mx-3 ">
+       
+        <a class="btn bg-gradient-dark mt-4 w-100" href="" type="button">Đăng xuất</a>
+    </div>
 </aside>

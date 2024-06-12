@@ -17,6 +17,9 @@
 </div>
 
 <form id="form-edit" method="post" asp-area="Admin" asp-controller="Products" asp-action="Edit" enctype="multipart/form-data">
+    <input type="hidden" asp-for="ProductId" value="@Model.ProductId"/>
+    <input type="hidden" asp-for="CreateAt" value="@Model.CreateAt" />
+
     <div class="bg-white shadow-blur border-radius-xl p-4">
         @if (ViewBag.Errors != null)
         {
@@ -45,15 +48,15 @@
                 <div class="row row-cols-1">
                     <label> Bán </label>
 
-                    <label class="switch" style="max-width:60px">
-                        <input type="checkbox" asp-for="IsActive" value="@Model.IsActive" />
-                        <span class="slider round"></span>
+                    <label class="switch checkbox" style="max-width:60px">
+                        @* <input type="checkbox" asp-for="IsActive" value="@Model.IsActive" /> *@
+                        @* <input type="hidden" asp-for="IsActive" value="false" /> *@
+                        <input type="checkbox" asp-for="IsActive" id="dataActive" /> 
+                        <span class="slider round" id="btnSetActive"></span>
                     </label>
                 </div>
-               
             </div>
         </div>
-
 
 
         <div class="form-group">
@@ -70,6 +73,8 @@
 
         </div>
         <div id="imagePreview" class="d-flex flex-wrap"></div>
+        <input type="hidden" id="ImagesOrder" asp-for="ImagesOrder" />
+
         <div id="old_img">
             @foreach(string img in Model.ImagesDisplay)
             {
@@ -125,12 +130,12 @@
                             <span asp-validation-for="Varriants[i].Quantity" class="text-danger"></span>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-danger" onclick="removeVariant(this)">Xóa</button>
+                    <button type="button" class="btn btn-outline-danger" onclick="removeVariant(this)">Xóa</button>
 
                 </div>
             }
         </div>
-        <button class="btn bg-gradient-dark" type="button" onclick="addVariant()">Add Variant</button>
+        <button class="btn bg-gradient-dark" type="button" onclick="addVariant()">Thêm thuộc tính</button>
     </div>
 
 
@@ -140,6 +145,7 @@
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
 
 <script>
     var colors = @Html.Raw(colorsJson);
@@ -155,6 +161,17 @@
 
     });
 
+</script>
+<script>
+    $('#btnSetActive').click(function () {
+        var va = $('#dataActive').val();
+        if (va === "true") {
+            $('#dataActive').val("false");
+        } else {
+            $('#dataActive').val("true");
+        }
+        console.log($('#dataActive').val());
+    });
 </script>
 
 

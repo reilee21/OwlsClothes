@@ -1,0 +1,117 @@
+﻿
+
+.card {
+    box-shadow: 0 20px 27px 0 rgba(0, 0, 0, 0.05);
+}
+
+.mt-8 {
+    margin-top: 8rem !important;
+}
+
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 0 solid rgba(0, 0, 0, 0.125);
+    border-radius: 1rem;
+}
+
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0, 0, 0, .125);
+    border-radius: .25rem;
+}
+
+    .card .card-body {
+        font-family: "Open Sans";
+        padding: 1.5rem;
+    }
+
+.mb-3 {
+    margin-bottom: 1rem !important;
+}
+.form-controll {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.4rem;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #d2d6da;
+    appearance: none;
+    border-radius: 0.5rem;
+    transition: box-shadow 0.15s ease,
+}
+
+.bg-gradient-info {
+    background-image: linear-gradient(310deg, #2152ff 0%, #21d4fd 100%);
+}
+.btnn {
+    margin-bottom: 1rem;
+    letter-spacing: -0.025rem;
+    text-transform: uppercase;
+    box-shadow: 0 4px 7px -1px rgba(0, 0, 0, 0.11), 0 2px 4px -1px rgba(0, 0, 0, 0.07);
+    background-size: 150%;
+    background-position-x: 25%;
+}
+.mb-0 {
+    margin-bottom: 0 !important;
+}
+
+.mt-4 {
+    margin-top: 1.5rem !important;
+}
+
+.w-100 {
+    width: 100% !important;
+}
+.btnn {
+    display: inline-block;
+    font-weight: 700;
+    line-height: 1.4;
+    color: #67748e;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.75rem;
+    border-radius: 0.5rem;
+    transition: all 0.15s ease-in;
+    color:white;
+}
+
+.button, [type="button"], [type="reset"], [type="submit"] {
+    -webkit-appearance: button;
+}
+.form-controll:focus {
+    color: #495057;
+    background-color: #fff;
+    border-color: #e293d3;
+    outline: 0;
+    box-shadow: 0 0 0 2px #e9aede;
+}
+#resetPass label {
+    display:inline-block;
+    padding: 4px 0;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #344767;
+    margin-left: 0.25rem;
+}

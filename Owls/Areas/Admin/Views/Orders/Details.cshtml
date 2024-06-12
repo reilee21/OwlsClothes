@@ -1,0 +1,171 @@
+﻿@model Order
+
+
+
+<div class="row">
+    <div class="col-12 col-lg-8">
+        <div class="card mt-4">
+            <div class="card-header pb-0 p-3">
+                <h5 class="mb-0 " style="margin-left:4px">Mã đơn : @Model.OrderId</h5>
+            </div>
+            <div class="card-body p-3">
+                <div class="row">
+                    <div class="col-md-5 mb-md-0 mb-4">
+                        <div class="card card-body border card-plain border-radius-lg d-flex align-items-start flex-col">
+                            <div class="row w-100">
+                                <div class="col-8">
+                                    <h6 class="mb-0">Tổng sản phẩm:</h6>
+                                </div>
+                                <div class="col-4 text-end">
+                                    @{
+                                        int ttprod = 0;
+                                        foreach(var i in Model.OrderDetails)
+                                        {
+                                            ttprod += (int)i.Quantity;
+                                        }
+                                    }
+                                    <h6 class="mb-0"> @ttprod</h6>
+                                </div>
+                            </div>
+                            <div class="row w-100">
+                                <div class="col-6">
+                                    <h6 class="mb-0">Tạm tính:</h6>
+                                </div>
+                                <div class="col-6 text-end">
+                                    <h6 class="mb-0"> @Money.Cast((int)Model.SubTotal)</h6>
+                                </div>
+                            </div>
+                            <div class="row w-100">
+                                <div class="col-6">
+                                    <h6 class="mb-0">Phí ship: </h6>
+                                </div>
+                                <div class="col-6 text-end">
+                                    <h6 class="mb-0"> @Money.Cast((int)Model.ShippingFee)</h6>
+                                </div>
+                            </div>
+                            @{
+                                var total = Model.SubTotal + Model.ShippingFee;
+                            }
+                            <div class="row w-100">
+                                <div class="col-6">
+                                    <h6 class="mb-0"><b>Tổng: </b></h6>
+
+                                </div>
+                                <div class="col-6 text-end">
+                                    <h6 class="mb-0"><b>@Money.Cast((int)total)</b></h6>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-7 mb-md-0 mb-4">
+                        <div class="card card-body border card-plain border-radius-lg d-flex align-items-start flex-col gap-2">
+                           
+                            <div class="row w-100">
+                                <div class="col-5">
+                                    <h6 class="mb-0 text-sm">Khách :  </h6>
+                                </div>
+                                <div class="col-7 ">
+                                    <h6 class="mb-0 text-sm"> @Model.CustomerName </h6>
+                                </div>
+                            </div>
+                            <div class="row w-100">
+                                <div class="col-5">
+                                    <h6 class="mb-0 text-sm ">Số điện thoại: </h6>
+                                </div>
+                                <div class="col-7">
+                                    <h6 class="mb-0 text-sm "> @Model.CustomerPhone</h6>
+                                </div>
+                            </div>
+                            <div class="row w-100">
+                                <div class="col-3">
+                                    <h6 class="mb-0 text-sm" style="min-height:50px">Địa chỉ: </h6>
+                                </div>
+                                <div class="col-9 ">
+                                    <h6 class="mb-0 text-sm" style="min-height:50px">@Model.Address </h6>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-lg-4">
+        <form asp-area="Admin" asp-action="Details" asp-controller="Orders" method="post">
+            <input type="hidden" asp-for="OrderId" value="@Model.OrderId"/>
+            <div class="card mb-4 mt-4">
+                <div class="card-header pb-0 p-3">
+                    <div class="row w-100">
+                        <div class="col-6 d-flex align-items-center">
+                            <h5 class="mb-0">Cập nhật</h5>
+                        </div>
+                        <div class="col-6 text-end">
+                            <button class="btn btn-outline-primary btn-sm mb-0">Lưu</button>
+                        </div>
+                    </div>
+                </div>
+            <div class="card-body p-3 pb-0">
+                <ul class="list-group">
+                    <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                        <div class="d-flex flex-column">
+                        <h6 class=" text-dark font-weight-bold text-sm">Tạo lúc:</h6>
+                        </div>
+                        <div class="d-flex flex-column">
+                                <h6 class=" text-dark font-weight-bold text-sm">@Model.CreateAt </h6>
+                        </div>
+                    </li>
+                    <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                        <div class="d-flex flex-column">
+                            <h6 class=" text-dark font-weight-bold text-sm">Cập nhật lúc :</h6>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <h6 class=" text-dark font-weight-bold text-sm"> @Model.UpdateAt </h6>
+                        </div>
+                    </li>
+                    <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                        <div class="d-flex flex-column justify-content-end">
+                            <h6 class=" text-dark font-weight-bold text-sm">Trạng thái</h6>
+                        </div>
+                        <div class="d-flex flex-column">
+                              <select class="form-control text-center" style="width:150px" asp-for="Status" asp-items="(SelectList)ViewBag.Status"></select>                       
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header pb-0">
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+                <div class="table-responsive p-0">
+                    <table id="productsTable" class="table align-items-center mb-0">
+                        <thead>
+                            <tr>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sản phẩm</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Loại</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Số lượng</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Giá</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Giá Bán</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var od in Model.OrderDetails)
+                            {
+                                <partial name="_OrderItem" model="od" />
+                            }
+                        </tbody>
+
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

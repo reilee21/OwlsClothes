@@ -1,0 +1,47 @@
+﻿<div class="modal fade" id="editColorModal" tabindex="-1" aria-labelledby="editColorModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editColorModalLabel">Chỉnh sửa màu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editColorForm">
+                    <input type="hidden" id="editColorId" name="colorId">
+                    <div class="mb-3">
+                        <label for="editColorName" class="form-label">Tên màu:</label>
+                        <input type="text" class="form-control" id="editColorName" name="colorName" required>
+                    </div>
+                    <div class="row justify-content-between">
+                        <button class="btn btn-outline-danger col-2" id="deletecolor" style="margin-left:8px">Xoá</button>
+                        <button type="submit" class="btn btn-primary col-2 " style="margin-right:8px">Lưu</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).on('click', '#deletecolor', function (e) {
+        e.preventDefault();
+        var id = $('#editColorId').val();
+        var name = $('#editColorName').val();
+
+        $.ajax({
+            type: 'POST',
+            url: '/Admin/Others/RemoveColor', 
+            data: {
+                colorId: id,
+                colorName: name
+            },
+            success: function (response) {
+                $('#editColorModal').modal('hide');
+                location.reload();                
+            },
+            error: function (xhr, status, error) {
+                alert("Không thể xoá.");
+            }
+        });
+  
+    });
+</script>

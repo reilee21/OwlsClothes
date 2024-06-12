@@ -26,8 +26,8 @@
   };
 })();
 
-// Verify navbar blur on scroll
-navbarBlurOnScroll('navbarBlur');
+/*// Verify navbar blur on scroll
+navbarBlurOnScroll('navbarBlur');*/
 
 
 // initialization of Tooltips

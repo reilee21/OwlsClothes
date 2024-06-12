@@ -123,9 +123,8 @@ namespace Owls.Controllers
             }
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "data.json");
-            var jsonData = await System.IO.File.ReadAllTextAsync(filePath);
-            var locationService = new LocationService(jsonData);
+            LocationService locationService = new LocationService();
+            await locationService.InitializeAsync();
             checkOutModel.Ward = locationService.GetWardName(checkOutModel.City, checkOutModel.Dicstrict, checkOutModel.Ward);
             checkOutModel.Dicstrict = locationService.GetDistrictName(checkOutModel.City, checkOutModel.Dicstrict);
             checkOutModel.City = locationService.GetCityName(checkOutModel.City);

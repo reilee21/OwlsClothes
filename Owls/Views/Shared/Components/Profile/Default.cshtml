@@ -1,0 +1,124 @@
+﻿@model OwlsUser
+
+<link href="~/css/profile.css" rel="stylesheet" />
+
+@if (Model != null)
+{
+<div class="row-cols-6 mt-4">
+    <div class="card card-body blur shadow-blur col-12 col-lg-6 m-auto">
+        <div class="row">
+            <div class="card card-body border card-plain border-radius-lg ">
+                    <h5 class="mb-1 text-center">
+                        Thông tin cá nhân
+                    </h5>
+                  
+            </div>
+        </div>
+        <div class="mt-2">
+            <form id="updateProfileForm">
+                <input type="hidden" asp-for="Id"/>
+                <div class="info">
+                    <div class="row">
+                        <div class="cus_name col-lg-6 col-12 ">
+                            <h6 class="text-sm">Tài khoản đăng nhập</h6>
+                            <input disabled id="acc" type="text" value="@Model.UserName" />
+                        </div>
+                        <div class="cus_name col-lg-6 col-12">
+                            <h6 class="text-sm">Email</h6>
+                            <input disabled id="mail" type="text" value="@Model.Email" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="cus_name col-lg-6 col-12 ">
+                            <h6 class="text-sm">Họ tên</h6>
+                            <input asp-for="FullName" id="cus_name" type="text" />
+                        </div>
+                        <div class="cus_name col-lg-6 col-12">
+                            <h6 class="text-sm">Số điện thoại</h6>
+                            <input asp-for="PhoneNumber" id="cus_phone" type="text" />
+                        </div>
+                    </div>
+
+                    <div class="address-form col-12 row">
+                        <div class="col-12 col-lg-6 mt-2">
+                            <select asp-for="City"
+                                    class="form-control"
+                                    placeholder="Tỉnh/Thành phố"
+                                    id="province"
+                                    type="text"
+                                    onchange="updateShippingFee(this)">
+                                <option value="invalid">Tỉnh/Thành phố</option>
+
+                            </select>
+                            <small></small>
+                        </div>
+                        <div class="col-12 col-lg-6 mt-2">
+                            <select asp-for="Dicstrict"
+                                    class="form-control"
+                                    placeholder="Quận/Huyện" id="district" type="text">
+                                <option value="invalid">Quận/Huyện</option>
+
+                            </select>
+                            <small></small>
+                        </div>
+                        <div class="col-12 col-lg-4 mt-2">
+                            <select asp-for="Ward"
+                                    class="form-control"
+                                    placeholder="Phường/Xã" id="village" type="text">
+                                <option value="invalid">Phường/Xã</option>
+                            </select>
+                            <small></small>
+                        </div>
+                        <div class="col-12 col-lg-8 mt-2">
+                            <input asp-for="Address"
+                                    class="form-control"
+                                    placeholder="Địa chỉ liên hệ" type="text" />
+                            <small></small>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center ">
+                    <button type="submit" class="btn btn-outline-primary btn-sm mb-0">Lưu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+}
+else
+{
+    <h1>Guest</h1>
+}
+<script>
+    var oldCity = "@Html.Raw(Model.City)";
+    var oldDistrict = "@Html.Raw(Model.Dicstrict)";
+    var oldWard = "@Html.Raw(Model.Ward)";
+
+</script>
+<script src="~/js/uprofile.js"></script>
+
+<script>
+    document.getElementById('updateProfileForm').addEventListener('submit', function (event) {
+        event.preventDefault(); 
+
+        var formData = new FormData(this);
+
+        fetch('/Auth/UpdateProfile', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.succeeded) {
+                    alert('Profile updated successfully!');
+                    
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+</script>

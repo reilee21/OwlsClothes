@@ -1,0 +1,43 @@
+﻿@model OrderDetail
+@{
+    var colors = ViewBag.Colors;
+    Dictionary<int, string> cl = new();
+    foreach (var i in colors)
+    {
+        cl.Add(i.ColorId, i.ColorName);
+    }
+}
+
+<tr>
+    <td>
+        <div class="d-flex px-2 py-1">
+            <div>
+                <img src="@Model.ProductVariant.Product.Imagethumbnail" class="avatar avatar-sm me-3" alt="@Model.ProductVariant.Product.Name">
+            </div>
+            <div class="d-flex flex-column justify-content-center">
+                <h6 class="mb-0 text-sm">@Model.ProductVariant.Product.Name</h6>
+            </div>
+        </div>
+    </td>
+    <td>
+        <p class="text-xs font-weight-bold mb-0">
+            @if (!String.IsNullOrEmpty(Model.ProductVariant.Size))
+            {
+                <span>[@Model.ProductVariant.Size]</span>
+            }
+            @if (Model.ProductVariant.Color != null)
+            {
+                <span> | [@cl[(int)@Model.ProductVariant.ColorId]] </span>
+            }
+        </p>
+    </td>
+    <td class="align-middle text-center text-sm">
+        <h6 class="mb-0 text-sm">@Model.Quantity</h6>
+    </td>
+    <td class="align-middle text-center">
+        <span class="text-secondary text-xs font-weight-bold">@Money.Cast((int)Model.ProductVariant.Cost)</span>
+    </td>
+    <td class="align-middle text-center">
+        <span class="text-secondary text-xs font-weight-bold">@Money.Cast((int)Model.Price)</span>
+    </td>
+</tr>

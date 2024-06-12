@@ -1,0 +1,34 @@
+﻿@model IEnumerable<Order>
+
+
+<tbody id="orders">
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                <h6 class="mb-0 text-xs  ">@item.CustomerName</h6>
+            </td>
+            <td>
+                @{var total = item.SubTotal + item.ShippingFee;}
+                <p class="text-xs font-weight-bold mb-0 align-middle">@Money.Cast((int)total)</p>
+            </td>
+            <td>
+                <h6 class="mb-0 text-sm align-middle text-center">@item.Status</h6>
+            </td>
+            <td class="align-middle text-center">
+                <span class="text-secondary text-xs font-weight-bold">@item.CreateAt</span>
+            </td>
+            <td class="align-middle text-center">
+                <span class="text-secondary text-xs font-weight-bold">@item.UpdateAt</span>
+            </td>
+            <td>
+                <h6 class="mb-0 text-xs">@item.Address</h6>
+            </td>
+            <td class="align-middle">
+                <a href="@Url.Action("Details","Orders",new{orderId = item.OrderId,Area = "Admin"})" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit">
+                    Edit
+                </a>
+            </td>
+        </tr>
+    }
+</tbody>

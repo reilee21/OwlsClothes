@@ -5148,10 +5148,11 @@ fieldset:disabled .btn {
     overflow: visible;
   }
 
-  .navbar-expand-lg .navbar-collapse {
-    display: flex !important;
-    flex-basis: auto;
-  }
+    .navbar-expand-lg .navbar-collapse {
+        display: flex !important;
+        flex-basis: auto;
+        justify-content: flex-end;
+    }
 
   .navbar-expand-lg .navbar-toggler {
     display: none;
@@ -5184,6 +5185,7 @@ fieldset:disabled .btn {
   .navbar-expand-xl .navbar-collapse {
     display: flex !important;
     flex-basis: auto;
+    justify-content:flex-end
   }
 
   .navbar-expand-xl .navbar-toggler {
@@ -5217,6 +5219,7 @@ fieldset:disabled .btn {
   .navbar-expand-xxl .navbar-collapse {
     display: flex !important;
     flex-basis: auto;
+    justify-content:flex-end;
   }
 
   .navbar-expand-xxl .navbar-toggler {
@@ -5249,6 +5252,8 @@ fieldset:disabled .btn {
 .navbar-expand .navbar-collapse {
   display: flex !important;
   flex-basis: auto;
+  justify-content:flex-end
+
 }
 
 .navbar-expand .navbar-toggler {
@@ -20802,6 +20807,7 @@ hr.horizontal.gray-light {
   .g-sidenav-show .navbar:not(.sidenav).navbar-main .navbar-collapse {
     display: flex !important;
     flex-basis: auto;
+    justify-content:flex-end
   }
 
   .g-sidenav-show .navbar:not(.sidenav).navbar-main .navbar-nav {

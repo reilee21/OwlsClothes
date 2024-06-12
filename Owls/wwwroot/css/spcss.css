@@ -1,0 +1,20 @@
+﻿.card-body{
+    max-height: 500px;
+    overflow: auto;
+    scrollbar-width: thin;
+}
+#inputfee{
+    position: relative ;
+}
+input#editFee {
+    color: transparent;
+}
+    input#editFee::selection{
+        background-color:transparent;
+    }
+    #inputfee span {
+        position: absolute;
+        top: 40px;
+        left: 20px;
+        color: #030318;
+    }

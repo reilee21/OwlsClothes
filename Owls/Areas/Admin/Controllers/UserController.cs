@@ -2,11 +2,13 @@
 
 namespace Owls.Areas.Admin.Controllers
 {
-    public class AccountController : Controller
+    [Area("Admin")]
+    public class UserController : Controller
     {
+        [Route("/Admin/Profile")]
         public IActionResult Index()
         {
-            ViewBag.Nav = "Account";
+            ViewBag.Nav = "Profile";
             return View();
         }
     }
