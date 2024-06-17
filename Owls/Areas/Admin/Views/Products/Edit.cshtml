@@ -49,9 +49,8 @@
                     <label> Bán </label>
 
                     <label class="switch checkbox" style="max-width:60px">
-                        @* <input type="checkbox" asp-for="IsActive" value="@Model.IsActive" /> *@
-                        @* <input type="hidden" asp-for="IsActive" value="false" /> *@
-                        <input type="checkbox" asp-for="IsActive" id="dataActive" /> 
+
+                        <input type="checkbox" asp-for="IsActive" id="dataActive" value="@Model.IsActive"/> 
                         <span class="slider round" id="btnSetActive"></span>
                     </label>
                 </div>

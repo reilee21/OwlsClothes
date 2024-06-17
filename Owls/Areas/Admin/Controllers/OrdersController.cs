@@ -42,7 +42,7 @@ namespace Owls.Areas.Admin.Controllers
                 qr = qr.Where(o => o.CreateAt < d.AddDays(1));
             }
             int pageNumber = page ?? 1;
-            int pageSize = 3;
+            int pageSize = 10;
             var pagedOrders = await qr
                             .OrderByDescending(o => o.CreateAt)
                             .Skip((pageNumber - 1) * pageSize)

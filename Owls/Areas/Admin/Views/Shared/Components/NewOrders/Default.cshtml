@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Order>
+
+
+<link href="~/css/prod.css" rel="stylesheet" />
+<div class="col-12">
+    <div class="card mb-4">
+        <div class="card-header pb-0">
+            <h5 class="w-20">Đơn hàng hôm nay: @ViewBag.Pager?.TotalItems</h5>
+        </div>
+        @if (Model.Any())
+        {
+            <div class="card-body px-0 pt-0 pb-2">
+                <div class="table-responsive p-0">
+                    <table id="productsTable" class="table align-items-center mb-0">
+                        <thead>
+                            <tr>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Khách</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Tổng tiền</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Trạng thái</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tạo </th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Cập nhật</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Địa chỉ</th>
+                                <th class="text-secondary opacity-7"></th>
+                            </tr>
+                        </thead>
+                        @await Html.PartialAsync("_Order", Model)
+
+                    </table>
+                </div>
+            </div>
+            <nav aria-label="...">
+                <div page-model-admin2="@ViewBag.Pager" page-action="Index" page-classes-enabled="true"
+                     page-class="page-index"
+                     page-class-selected="active" class="pagination justify-content-center" id="client-pager">
+                </div>
+            </nav>
+        }
+        else
+        {
+            <div class="card-body px-0 pt-0 pb-2">
+
+            </div>
+
+        }
+
+
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script>
+    function loadPage(page) {
+        $.ajax({
+            url: '/Admin/Home/LoadOrders',
+            type: 'GET',
+            data: { page: page },
+            success: function (result) {
+                $('#order-view-component').html(result);
+            }
+        });
+    }
+</script>
+

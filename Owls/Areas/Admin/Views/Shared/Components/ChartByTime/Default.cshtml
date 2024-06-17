@@ -1,0 +1,87 @@
+﻿
+
+<div class="card card-body mx-2 mt-4">
+    <div class="row">
+        <label class="col-12 col-lg-3" for="time-range">Doanh thu:</label>
+        <select id="time-range" class="form-control col-12 col-lg-9" style="width:auto !important">
+            <option value="day">7 ngày gần nhất</option>
+            <option value="week">4 tuần gần nhất</option>
+            <option value="month">6 tháng gần nhất</option>
+        </select>
+    </div>
+    <div id="revenue-chart" style="height: 250px;"></div>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.3.0/raphael.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+        function fetchDataAndRenderChart(timeRange) {
+            var from = new Date();
+            var to = new Date();
+            if (timeRange === 'day') {
+                from.setDate(from.getDate() - 7);
+            } else if (timeRange === 'week') {
+                from.setDate(from.getDate() - (7 * 4));
+            } else if (timeRange === 'month') {
+                from.setMonth(from.getMonth() - 6);
+            }
+
+            $.ajax({
+                url: `/api/GetRevenueByTime?from=${from.toISOString()}&to=${to.toISOString()}&range=${timeRange}`,
+                method: 'GET',
+                success: function (data) {
+                    $('#revenue-chart').empty();
+                    var formattedData = data.map(d => {
+                        var date = new Date(d.date);
+                        if (timeRange === 'day') {
+                            return {
+                                date: date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }),
+                                revenue: d.amount
+                            };
+                        } else if (timeRange === 'week') {
+                            var startOfWeek = new Date(date.setDate(date.getDate() - date.getDay() + 1));
+                            var endOfWeek = new Date(startOfWeek);
+                            endOfWeek.setDate(startOfWeek.getDate() + 6);
+                            return {
+                                date: `${startOfWeek.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })} - ${endOfWeek.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })}`,
+                                revenue: d.amount
+                            };
+                        } else if (timeRange === 'month') {
+                            return {
+                                date: date.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' }),
+                                revenue: d.amount
+                            };
+                        }
+                    });
+                    new Morris.Bar({
+                        element: 'revenue-chart',
+                        data: formattedData,
+                        xkey: 'date',
+                        ykeys: ['revenue'],
+                        labels: ['Doanh thu'],
+                        parseTime: false,
+                        barColors: ['#3A416F'],
+                        hideHover: 'auto',
+                        gridLineColor: '#eef0f2',
+                        resize: true
+                    });
+                },
+                error: function () {
+                    console.error('Failed to load revenue data');
+                }
+            });
+        }
+
+        $('#time-range').change(function () {
+            fetchDataAndRenderChart($(this).val());
+        });
+
+        // Fetch initial data
+        fetchDataAndRenderChart($('#time-range').val());
+    });
+</script>

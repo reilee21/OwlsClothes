@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Owls.Repositories.ColorRepos;
+using Owls.Repositories.ManageRepos;
 using Owls.Repositories.OrderRepos;
 using Owls.Repositories.ProductRepos;
 using Owls.Services.Firebase;
@@ -17,7 +18,7 @@ namespace Owls
 
             builder.Services.AddScoped<IColorRepos, ColorRepos>();
             builder.Services.AddScoped<IOrderRepos, OrderRepos>();
-
+            builder.Services.AddScoped<IManageRepos, ManageRepos>();
             builder.Services.AddTransient<IFirebaseStorage, FirebaseStorageService>();
             builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
             builder.Services.AddTransient<IEmailService, EmailService>();

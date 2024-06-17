@@ -1,0 +1,70 @@
+﻿<div class="card card-body mx-2 mt-4">
+    <div class="row">
+        <label class="col-12 col-lg-3" for="best-seller-type">Sản phẩm bán chạy:</label>
+        <select id="best-seller-type" class="form-control col-12 col-lg-9" style="width:auto !important">
+            <option value="revenue">Theo doanh thu</option>
+            <option value="quantity">Theo doanh số</option>
+        </select>
+    </div>
+    <div id="top-product-chart" style="height: 250px;"></div>
+</div>
+<script>
+    $(document).ready(function () {
+        function fetchTopProducts(type) {
+            $.ajax({
+                url: `/api/BestSeller?type=${type}&take=5`,
+                method: 'GET',
+             //   success: function (data) {
+             //       $('#top-product-chart').empty();
+             //       new Morris.Bar({
+             //           element: 'top-product-chart',
+             //           data: data.map(d => ({
+             //               product: d.productName,
+             //               value: type === 'revenue' ? d.revenue : d.quantity
+             //           })),
+             //           xkey: 'product',
+             //           ykeys: ['value'],
+             //           labels: [type === 'revenue' ? 'Doanh thu' : 'Số lượng'],
+             //           parseTime: false,
+             //       });
+             //   },
+                success: function (data) {
+                    var formattedData = data.map((d, index) => ({
+                        order: 'Top '+(index + 1),
+                        name: d.productName,
+                        value: type === 'revenue' ? d.revenue : d.quantity
+                    }));
+
+                    $('#top-product-chart').empty();
+
+                    new Morris.Bar({
+                        element: 'top-product-chart',
+                        data: formattedData,
+                        xkey: 'order',
+                        ykeys: ['value'],
+                        labels: [type === 'revenue' ? 'Doanh thu' : 'Số lượng'],
+                        parseTime: false,
+                        hideHover: 'auto',
+                        gridLineColor: '#eef0f2',
+                        hoverCallback: function (index, options, content, row) {
+                            var valueLabel = type === 'revenue' ? 'Doanh thu' : 'Số lượng';
+                            return `<div class='morris-hover-row-label'>${row.name}</div>
+                                            <div class='morris-hover-point' style='color: ${options.barColors[0]}'>
+                                                ${valueLabel}: ${row.value}
+                                            </div>`;
+                        }
+                    });
+                },
+                error: function () {
+                    console.error('Failed to load top products data');
+                }
+            });
+        }
+
+        $('#best-seller-type').change(function () {
+            fetchTopProducts($(this).val());
+        });
+
+        fetchTopProducts($('#best-seller-type').val());
+    });
+</script>
