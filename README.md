@@ -62,6 +62,6 @@ Admin
 
 - DashBoard => done
 --------
-Authorization Done
+Authorization  =>  done
  ----ADDING DATA ORDER PEDING....
 ```
