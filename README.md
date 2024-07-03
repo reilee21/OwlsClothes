@@ -32,11 +32,11 @@ Account
 - Regis =>  done
 - Login => done
 - Logout =>  done
-- Profile =>  0%
+- Profile =>  done
 User
 - Cart => done
 - Checkout => done
-- Get User orders => order details =>  0%
+- Get User orders => order details =>  done
 
 Product
 - Searching =>  done
@@ -62,6 +62,6 @@ Admin
 
 - DashBoard => done
 --------
-Authorization pending...
-
+Authorization Done
+ ----ADDING DATA ORDER PEDING....
 ```
