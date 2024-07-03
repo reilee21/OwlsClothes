@@ -1,0 +1,37 @@
+﻿
+<div class="sidebar d-flex flex-row flex-lg-column">
+    <NavLink href="/customer/profile" class="nav-link text-nowrap rounded" ActiveClass="active">
+        Thông tin cá nhân
+    </NavLink>
+    <NavLink href="/customer/orders" class="nav-link text-nowrap rounded" ActiveClass="active">
+        Đơn hàng
+    </NavLink>
+</div>
+
+<style>
+    .sidebar {
+        width: fit-content;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius:8px;
+        height:fit-content
+    }
+
+    .nav-link {
+        display: block;
+        padding: 10px;
+        color: #000;
+        text-decoration: none;
+        margin-bottom:4px;
+    }
+
+        .nav-link:hover {
+            background-color: #e9ecef;
+            color: #007bff;
+        }
+
+    .nav-link.active {
+            background-color: #007bff;
+            color: white;
+    }
+</style>

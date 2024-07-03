@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,8 @@ using Owls.Services.Firebase;
 namespace Owls.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Policy = "AdminOrStaff")]
+
     public class ProductsController : Controller
     {
         private readonly OwlStoreContext _storeContext;

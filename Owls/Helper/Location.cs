@@ -4,7 +4,7 @@ namespace Owls.Helper
 {
     public class LocationService
     {
-        private List<CityData> _cities;
+        public List<CityData> _cities;
         public LocationService()
         {
         }
@@ -56,6 +56,7 @@ namespace Owls.Helper
             var ward = district?.Wards.FirstOrDefault(w => w.Name == wardName);
             return ward?.Id;
         }
+
     }
 
 

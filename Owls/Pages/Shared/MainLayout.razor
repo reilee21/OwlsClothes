@@ -1,0 +1,12 @@
+﻿@inherits LayoutComponentBase
+<link href="/css/copysoftui.css" rel="stylesheet" />
+
+<div  style="width:100%" >
+    @Body
+</div>
+<BlazoredToasts Position="ToastPosition.BottomRight"
+                Timeout="5"
+                IconType="IconType.FontAwesome"
+                SuccessClass="success-toast-override"
+                SuccessIcon="fa fa-thumbs-up"
+                ErrorIcon="fa fa-bug" />

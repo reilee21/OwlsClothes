@@ -22,6 +22,9 @@
     <link rel="stylesheet" asp-append-version="true" href="~/css/auth.css" type="text/css">
     <link rel="stylesheet" asp-append-version="true" href="~/css/checkout.css" type="text/css">
 
+    <link rel="stylesheet" href="~/Owls.styles.css" >
+
+    <base href="~/"/>
 </head>
 
 <body>
@@ -51,7 +54,9 @@
 
     <script asp-append-version="true" src="~/js/main.js"></script>
     <partial name="_ValidationScriptsPartial"/>
+    <script src="_framework/blazor.server.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
+    
 </body>
 </html>

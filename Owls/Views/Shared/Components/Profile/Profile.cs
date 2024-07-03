@@ -18,6 +18,7 @@ namespace Owls.Views.Shared.Components.Profile
         public async Task<IViewComponentResult> InvokeAsync()
         {
             var userId = UserClaimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
+
             if (userId != null)
             {
                 var user = await userManager.FindByIdAsync(userId);

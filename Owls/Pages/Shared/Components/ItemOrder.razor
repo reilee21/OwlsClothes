@@ -1,0 +1,46 @@
+﻿@inject NavigationManager Navigate
+<div class="card card-body blur shadow-blur m-auto" style="width:100%">
+    <div class="d-flex flex-row justify-content-between  align-items-center">
+        <span class="font-weight-light">@order.Status</span>
+        <div class="btn btn-info text-light rounded" @onclick="@(e=>GoToDetails())">
+            <span style="font-weight:500">Chi tiết</span>
+        </div>  
+    </div>
+    <hr />
+    <div>
+        @foreach (var i in order.OrderDetails.Take(ShowDetailItem))
+        {
+            <ItemProductOrder orderdetail="i"/>
+        }
+    </div>
+    @if (order.OrderDetails.Count > ItemDF)
+    {
+        <div class="mt-2 link-secondary px-2" @onclick="@(e=>Expand = !Expand)">
+            @if (Expand)
+            {
+                <span>Rút gọn</span>
+            }
+            else
+            {
+                <span>Xem thêm @(order.OrderDetails.Count - ItemDF) sản phẩm</span>
+            }
+        </div>
+    }
+    <hr/>
+    <h5 style="text-align:right;font-weight:500">Tổng tiền : @order.Total.ToString("#,###") đ</h5>
+</div>
+
+@code {
+    [Parameter]
+    public Order order { get; set; } = new Order();
+
+    public bool Expand { get; set; } = false;
+    private int ItemDF = 2;
+    public int ShowDetailItem => Expand ? order.OrderDetails.Count : ItemDF;
+
+
+    private void GoToDetails()
+    {
+        Navigate.NavigateTo($"customer/orders/{order.OrderId}");
+    }
+}

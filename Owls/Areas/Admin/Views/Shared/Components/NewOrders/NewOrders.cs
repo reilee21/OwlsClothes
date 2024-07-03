@@ -16,8 +16,8 @@ namespace Owls.Areas.Admin.Views.Shared.Components.NewOrders
         public async Task<IViewComponentResult> InvokeAsync(int page = 1, int pagesize = 3)
         {
             var qr = _storeContext.Orders.AsQueryable();
-            // DateTime now = DateTime.Now;
-            DateTime now = new DateTime(2024, 6, 8);
+            DateTime now = DateTime.Now;
+            //DateTime now = new DateTime(2024, 6, 8);
             qr = qr.Where(o => o.CreateAt.Date == now.Date);
 
             var newOrders = await qr

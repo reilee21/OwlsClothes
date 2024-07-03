@@ -1,5 +1,40 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿<main class="container my-5">
+    <section class="contact-info mb-5">
+        <h2 class="text-center mb-4">Hệ thống cửa hàng</h2>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item"><a >828 Sư Vạn Hạnh (Quận 10)</a></li>
+            <li class="list-group-item"><a >M4-M7-M9 Thất Sơn (Quận 10)</a></li>
+            <li class="list-group-item"><a >298-304 Cao Thắng (Quận 10)</a></li>
+            <li class="list-group-item"><a >32 Trường Sơn (Quận Tân Bình)</a></li>
+            <li class="list-group-item"><a >806 QL22, ấp Mỹ Hoà 3 (Hóc Môn)</a></li>
+        </ul>
+    </section>
+    <section class="contact-form">
+        <h2 class="text-center mb-4">
+            Gửi một lời nhắn cho tụi mình
+        </h2>
+        <form action="#" method="post">
+            <div class="d-flex flex-row w-100 gap-3">
+                <div class="w-50">
+                    <div class="form-group">
+                        <label for="name">Tên</label>
+                        <input type="text" id="name" name="name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" class="form-control" required>
+                    </div>
+                </div>
+                <div class="w-50">
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" class="form-control" rows="5" required></textarea>
+                    </div>
+                </div>
+            </div>
+           
+            
+            <button type="submit" class="btn btn-primary btn-block">Gửi</button>
+        </form>
+    </section>
+</main>

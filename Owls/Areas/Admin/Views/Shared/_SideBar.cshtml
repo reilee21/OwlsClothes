@@ -22,7 +22,7 @@
             @if (User.IsInRole("admin"))
             {
                 <li class="nav-item">
-                    <a class="nav-link  @(ViewBag.Nav == "Dashboard" ? "active" : "")">
+                    <a class="nav-link  @(ViewBag.Nav == "Dashboard" ? "active" : "")" href="/Admin">
                         <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                             <svg width="12px" height="12px" viewBox="0 0 45 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                                 <title>shop </title>
@@ -105,8 +105,10 @@
                     <span class="nav-link-text ms-1">Khác</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link @(ViewBag.Nav == "Accounts" ? "active" : "")" href="@Url.Action("Index","Accounts",new{Area = "Admin"})">
+              @if (User.IsInRole("admin"))
+            {
+                <li class="nav-item">
+                    <a class="nav-link @(ViewBag.Nav == "Accounts" ? "active" : "")" href="@Url.Action("Index","Accounts",new{Area = "Admin"})">
                     <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                         <svg width="12px" height="12px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                             <title>document</title>
@@ -124,7 +126,7 @@
                     </div>
                     <span class="nav-link-text ms-1">Tài khoản</span>
                 </a>
-            </li>
+            </li>}
             <li class="nav-item mt-3">
                 <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Tài khoản cá nhân</h6>
             </li>

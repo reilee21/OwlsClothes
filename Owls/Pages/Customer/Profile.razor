@@ -1,0 +1,240 @@
+﻿@page "/customer/profile"
+@using System.Text.RegularExpressions
+@inject UserManager<OwlsUser> UserManager
+@inject HttpContextAccessor HttpContextAccess
+@inject IToastService toastsv
+<link href="css/profile.css" rel="stylesheet" />
+
+<div class="mx-auto" style="padding:0 4rem">
+    <div class="card card-body blur shadow-blur m-auto">
+        <div class="row px-4">
+            <div class="card card-body border card-plain border-radius-lg ">
+                <h5 class="mb-1 text-center" style="font-weight:bold">
+                    Thông tin cá nhân
+                </h5>
+            </div>
+        </div>
+        <div class="mt-2">
+            <EditForm Model="@User" OnValidSubmit="HandleValidSubmit">
+                <div class="info">
+                    <div class="row">
+                        <div class="cus_name col-lg-6 col-12">
+                            <h6 class="text-sm">Tài khoản đăng nhập</h6>
+                            <InputText id="acc" class="form-control" @bind-Value="User.UserName"  Disabled />
+                        </div>
+                        <div class="cus_name col-lg-6 col-12">
+                            <h6 class="text-sm">Email</h6>
+                            <InputText id="mail" class="form-control" @bind-Value="User.Email" Disabled />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="cus_name col-lg-6 col-12">
+                            <h6 class="text-sm">Họ tên</h6>
+                            <InputText id="cus_name" class="form-control" @bind-Value="User.FullName" @oninput="@( (ChangeEventArgs e) =>  HandleChangeName(e))" />
+                            @if (Errors.ContainsKey("FullName"))
+                            {
+                                <h5 class="error">@Errors["FullName"]</h5>
+                                
+                            }
+
+                        </div>
+                        <div class="cus_name col-lg-6 col-12">
+                            <h6 class="text-sm">Số điện thoại</h6>
+                            <InputText id="cus_phone" class="form-control" @bind-Value="User.PhoneNumber" @oninput="@( (ChangeEventArgs e) =>  HandleChangePhone(e))" />
+                            @if (Errors.ContainsKey("Phone"))
+                            {
+                                <h5 class="error">@Errors["Phone"]</h5>
+
+                            }
+                         </div>
+                    </div>
+                    @if (Location.Any())
+                    {
+
+                        <div class="address-form col-12 row">
+                            <h6 class="text-sm">Địa chỉ liên hệ</h6>
+
+                            <div class=" col-12 ">
+                                <select class="form-control" id="city" @bind="SelectedCityId">
+                                    <option value="">Chọn thành phố</option>
+                                    @foreach (var city in Location)
+                                    {
+                                        <option value="@city.Id">@city.Name</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class=" col-12 mt-2">
+                                <select class="form-control" id="district" @bind="SelectedDistrictId" disabled="@string.IsNullOrEmpty(SelectedCityId)">
+                                    <option value="">Chọn quận/huyện</option>
+                                    @if (!string.IsNullOrEmpty(SelectedCityId))
+                                    {
+                                        var selectedCity = Location.FirstOrDefault(c => c.Id == SelectedCityId);
+                                        if (selectedCity != null)
+                                        {
+                                            @foreach (var district in selectedCity.Districts)
+                                            {
+                                                <option value="@district.Id">@district.Name</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class=" col-12 ">
+                                <select class="form-control" id="ward" @bind="SelectedWardId" disabled="@string.IsNullOrEmpty(SelectedDistrictId)">
+                                    <option value="">Chọn phường/xã</option>
+                                    @if (!string.IsNullOrEmpty(SelectedDistrictId))
+                                    {
+                                        var selectedCity = Location.FirstOrDefault(c => c.Id == SelectedCityId);
+                                        if (selectedCity != null)
+                                        {
+                                            var selectedDistrict = selectedCity.Districts.FirstOrDefault(d => d.Id == SelectedDistrictId);
+                                            if (selectedDistrict != null)
+                                            {
+                                                @foreach (var ward in selectedDistrict.Wards)
+                                                {
+                                                    <option value="@ward.Id">@ward.Name</option>
+                                                }
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-12 mt-3">
+                                <InputText class="form-control" placeholder="Địa chỉ liên hệ" @bind-Value="@User.Address" />
+                                @if (Errors.ContainsKey("Address"))
+                                {
+                                    <h5 class="error ">@Errors["Address"]</h5>
+
+                                }
+                            </div>
+                           
+
+                        </div>
+                    }
+
+                </div>
+                <div class="d-flex flex-row justify-content-between mt-2 px-2">
+
+                    <a class=" btn btn-link text-dark px-3 mb-0 changepass " style="left:0;" href="/reset">
+                        <i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>
+                        Đổi mật khẩu
+                    </a>
+                    
+                    <button type="submit" class="btn btn-outline-primary btn-sm mb-0 py-2 px-4">Lưu</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    public OwlsUser User { get; set; } = new();
+    public List<CityData> Location { get; set; } = new();
+    private LocationService LocationService { get; set; }
+    public string SelectedCityId { get; set; }
+    public string SelectedDistrictId { get; set; }
+    public string SelectedWardId { get; set; }
+    public Dictionary<string,string> Errors { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var us = HttpContextAccess.HttpContext.User;
+        var identityUser = await UserManager.GetUserAsync(us);
+        if (identityUser != null) User = identityUser;
+        LocationService = new LocationService();
+        await LocationService.InitializeAsync();
+        if (LocationService != null)
+        {
+            LoadLocation();
+            if (!string.IsNullOrEmpty(identityUser.City)&& !string.IsNullOrEmpty(identityUser.Dicstrict) && !string.IsNullOrEmpty(identityUser.Ward))
+            {
+                string cityId = LocationService.GetCityId(identityUser.City);
+                string disId = LocationService.GetDistrictId(identityUser.City, identityUser.Dicstrict);
+                string wId = LocationService.GetWardId(identityUser.City, identityUser.Dicstrict, identityUser.Ward);
+
+                SelectedCityId = cityId;
+                SelectedDistrictId = disId;
+                SelectedWardId = wId;
+            }
+
+        }
+
+    }
+    private void LoadLocation()
+    {
+        Location = LocationService._cities;
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (!Validate())
+        {
+            toastsv.ShowError("Kiểm tra lại thông tin");
+            return;
+        }
+        OwlsUser us = await UserManager.FindByIdAsync(User.Id);
+        if (us == null) return;
+        string w = LocationService.GetWardName(SelectedCityId, SelectedDistrictId, SelectedWardId);
+        string d = LocationService.GetDistrictName(SelectedCityId, SelectedDistrictId);
+        string c = LocationService.GetCityName(SelectedCityId);
+
+        us.City = c; us.Dicstrict = d; us.Ward = w; us.Address = User.Address;
+        us.PhoneNumber = User.PhoneNumber;
+        us.FullName = User.FullName;
+        try
+        {
+            await UserManager.UpdateAsync(us);
+            toastsv.ShowSuccess("Cập nhật thành công");
+        }
+        catch(Exception e)
+        {
+            toastsv.ShowError("Đã có lỗi xảy ra");
+            throw new Exception("Failed to update user : " + e.Message);
+        }
+    }
+    private bool Validate()
+    {
+        ValidateAddress();
+        return Errors.Any() ? false : true;
+    }
+    private async Task HandleChangeName(ChangeEventArgs e)
+    {
+        string value = e.Value.ToString();
+        if (string.IsNullOrWhiteSpace(value) || value.Length < 3)
+        {
+            Errors["FullName"] = "Tên không hợp lệ";
+        }
+        else
+        {
+            User.FullName = value;
+            Errors.Remove("FullName");
+        }
+        await Task.CompletedTask;
+    }
+    private async Task HandleChangePhone(ChangeEventArgs e)
+    {
+        string value = e.Value.ToString();
+        if (string.IsNullOrWhiteSpace(User.PhoneNumber) || !Regex.IsMatch(User.PhoneNumber, @"^[0-9]{10,11}$"))
+        {
+            Errors["Phone"] = "Số điện thoại không hợp lệ";
+        }
+        else
+        {
+            User.PhoneNumber = value;
+            Errors.Remove("Phone");
+        }
+        await Task.CompletedTask;
+    }
+    private void ValidateAddress()
+    {
+        if (string.IsNullOrEmpty(User.Address) || string.IsNullOrEmpty(SelectedCityId) || string.IsNullOrEmpty(SelectedDistrictId))
+        {
+            Errors["Address"] = "Địa chỉ không hợp lệ.";
+        }
+        else
+        {
+            Errors.Remove("Address");
+
+        }
+    }
+}

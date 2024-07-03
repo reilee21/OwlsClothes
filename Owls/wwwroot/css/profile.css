@@ -2,9 +2,15 @@
 .info .row{
     margin:6px auto !important;
 }
-.cus_name h6{
-    margin:0 auto;
-    padding:0 2px;
+h6 {
+    margin: 0 auto;
+    padding: 8px 4px;
+    color: #344767;
+    font-weight: 600;
+}
+h5 {
+    font-weight:600;
+    color: #344767
 }
 #mail,#acc{
     background-color:#e3e3e3
@@ -24,3 +30,39 @@
     border-radius: 0.5rem;
     transition: box-shadow 0.15s ease, border-color 0.15s ease;
 }
+.changepass {
+    box-shadow: none;
+    font-weight: 700;
+    border: 0;
+    letter-spacing: -0.025rem;
+    text-transform: uppercase;
+    background-size: 150%;
+    background-position-x: 25%;
+    color: #344767 !important;
+    padding-right: 1rem !important;
+    padding-left: 1rem !important;
+    margin-bottom: 0 !important;
+    text-decoration: none;
+    display: inline-block;
+    line-height: 1.4;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    background-color: transparent;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.8rem;
+    border-radius: 0.5rem;
+    transition: all 0.15s ease-in;
+}
+    .changepass:hover {
+        transform: scale(1.02);
+    }
+.btn,a {
+    transition: all 0.15s ease-in;
+}.error{
+     font-size:14px;
+     font-weight:400;
+     padding:6px 8px;
+     color:#ff0000;
+ }

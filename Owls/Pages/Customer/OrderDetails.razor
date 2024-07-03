@@ -1,0 +1,97 @@
+﻿@page "/customer/orders/{orderId}"
+@inject Repositories.OrderRepos.IOrderRepos OrderRepos
+
+
+<h6 class="p-2"> Đơn hàng: @Order?.OrderId  - <b> @Order?.Status</b></h6>
+<div class="d-flex flex-column gap-2">
+    <div class="d-flex flex-lg-row flex-column gap-2">
+    <div class="card card-body border card-plain border-radius-lg d-flex align-items-start flex-col gap-2 shadow blur">
+        <div class="row w-100">
+            <div class="col-8">
+                <h6 class="mb-0">Tổng sản phẩm:</h6>
+            </div>
+            <div class="col-4 text-end">
+                <h6 class="mb-0">@TotalQuantity</h6>
+            </div>
+        </div>
+        <div class="row w-100">
+            <div class="col-6">
+                <h6 class="mb-0">Tạm tính:</h6>
+            </div>
+            <div class="col-6 text-end">
+                <h6 class="mb-0">@Order?.SubTotal?.ToString("#,###") đ</h6>
+            </div>
+        </div>
+        <div class="row w-100">
+            <div class="col-6">
+                <h6 class="mb-0">Phí ship: </h6>
+            </div>
+            <div class="col-6 text-end">
+                <h6 class="mb-0">@Order?.ShippingFee?.ToString("#,###") đ</h6>
+            </div>
+        </div>
+        <div class="row w-100">
+            <div class="col-6">
+                <h6 class="mb-0"><b>Tổng: </b></h6>
+            </div>
+            <div class="col-6 text-end">
+                <h6 class="mb-0"><b>@Order?.Total.ToString("#,###") đ</b></h6>
+            </div>
+        </div>
+    </div>
+        <div class="card card-body border card-plain border-radius-lg d-flex align-items-start flex-col gap-2 shadow blur">
+
+        <div class="row w-100">
+            <div class="col-5">
+                <h6 class="mb-0 text-sm">Người nhận :  </h6>
+            </div>
+            <div class="col-7 ">
+                <h6 class="mb-0 text-sm"> @Order?.CustomerName </h6>
+            </div>
+        </div>
+        <div class="row w-100">
+            <div class="col-5">
+                <h6 class="mb-0 text-sm ">Số điện thoại: </h6>
+            </div>
+            <div class="col-7">
+                <h6 class="mb-0 text-sm "> @Order?.CustomerPhone</h6>
+            </div>
+        </div>
+        <div class="row w-100">
+            <div class="col-3">
+                <h6 class="mb-0 text-sm" style="min-height:50px">Địa chỉ: </h6>
+            </div>
+            <div class="col-9 ">
+                <h6 class="mb-0 text-sm" style="min-height:50px">@Order?.Address </h6>
+            </div>
+        </div>
+
+    </div>
+    </div>
+    <div class="card card-body border card-plain border-radius-lg d-flex align-items-start flex-col gap-2 ">
+        @if (Order?.OrderDetails != null)
+        {
+            foreach (var i in Order.OrderDetails)
+            {
+                <ItemProductOrder orderdetail="i" />
+            }
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string orderId { get; set; }
+    private Order Order { get; set; }
+    private int TotalQuantity => Order?.OrderDetails?.Sum(od => od.Quantity) ?? 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadOrderDetails();
+    }
+
+    private async Task LoadOrderDetails()
+    {
+        Order = await OrderRepos.GetOrderDetail(orderId);
+    }
+}

@@ -58,6 +58,7 @@
                             };
                         }
                     });
+                    if (formattedData.length < 1) return;
                     new Morris.Bar({
                         element: 'revenue-chart',
                         data: formattedData,
@@ -68,7 +69,12 @@
                         barColors: ['#3A416F'],
                         hideHover: 'auto',
                         gridLineColor: '#eef0f2',
-                        resize: true
+                        resize: true,
+                        hoverCallback: function (index, options, content, row) {
+                            var tooltip = '<div class="morris-hover-row-label">' + row.date + '</div>' +
+                                '<div class="morris-hover-point">' + options.labels[0] + ': ' + row.revenue.toLocaleString() + '</div>';
+                            return tooltip;
+                        }
                     });
                 },
                 error: function () {

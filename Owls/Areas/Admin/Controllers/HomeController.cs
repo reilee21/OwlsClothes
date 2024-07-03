@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Owls.DTOs;
 using Owls.Helper;
@@ -7,6 +8,7 @@ using Owls.Models;
 namespace Owls.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "admin")]
     public class HomeController : Controller
     {
         private readonly OwlStoreContext context;

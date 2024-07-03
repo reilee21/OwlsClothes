@@ -8,10 +8,9 @@
         <input placeholder="Tài khoản" asp-for="Username"  />
         <input placeholder="Mật khẩu" asp-for="Password" />
 
-        <h6><a>Quên mật khẩu? </a></h6>
+        <h6><a href="/reset" style="color:black">Quên mật khẩu? </a></h6>
         <button type="submit"> Đăng nhập </button>
         <div class="regis">Chưa có tài khoản <a href="@Url.Action("Register","Auth")">Đăng ký ngay?</a></div>
-
     </form>
 
 </div>

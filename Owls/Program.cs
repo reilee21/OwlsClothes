@@ -1,3 +1,4 @@
+using Blazored.Toast;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Owls;
@@ -8,6 +9,12 @@ var builder = WebApplication.CreateBuilder(args).RegisteredServices();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddServerSideBlazor(options =>
+{
+    options.DetailedErrors = true;
+});
+builder.Services.AddBlazoredToast();
+
 builder.Services.AddDbContext<OwlStoreContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("Db"));
@@ -56,6 +63,8 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
+app.MapBlazorHub();
+app.MapFallbackToPage("/customer/{*catchall}", "/customer/Index");
 
 await AccountSeedData.Init(app);
 

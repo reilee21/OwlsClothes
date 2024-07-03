@@ -1,0 +1,56 @@
+﻿@inject IFirebaseStorage firebase
+@inject Repositories.ColorRepos.IColorRepos ColorRepos 
+
+<div class="d-flex flex-row gap-2" style="width:100%">
+    @if (string.IsNullOrEmpty(image))
+    {
+        <div class="w-10">
+            <div class="spinner-grow" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+
+    }
+    else
+    {
+        <img height="75" width="75" style="object-fit:cover" src="@image" alt="..." />
+
+    }
+    <div class="d-flex flex-column gap-2" style="width:100%">
+        <h5>@orderdetail.ProductVariant.Product.Name</h5>
+        <p class="d-flex flex-row gap-2">
+            <span >@orderdetail.ProductVariant.Size</span>
+            <span >@orderdetail.ProductVariant.Color?.ColorName</span>
+
+            <span>x @orderdetail.Quantity</span>
+
+        </p>
+    </div>
+    <h6 class="text-nowrap">
+        @orderdetail.Price.Value.ToString("#,###") đ
+    </h6>
+</div>
+
+
+
+@code {
+    [Parameter]
+    public OrderDetail orderdetail { get; set; } = new OrderDetail();
+    private string image { get; set; } = "";
+
+    private string? Size { get; set; }
+    private string? Color { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        await LoadImage();
+        var x = orderdetail.ProductVariant.Color;
+    }
+    public async Task LoadImage()
+    {
+        string baseimg = orderdetail.ProductVariant.Product.Imagethumbnail;
+        if (string.IsNullOrEmpty(orderdetail.ProductVariant.Product.Imagethumbnail) || baseimg.Contains("firebasestorage")) return;
+        string imgURL = await firebase.GetImageStreamAsync(baseimg);
+        image = imgURL;
+    }
+}

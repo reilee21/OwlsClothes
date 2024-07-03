@@ -49,8 +49,16 @@ namespace Owls
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
-
-
+            builder.Services.AddScoped<HttpContextAccessor>();
+            builder.Services.ConfigureApplicationCookie(opt =>
+            {
+                opt.AccessDeniedPath = "/";
+            });
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminOrStaff", policy =>
+                    policy.RequireRole("admin", "staff"));
+            });
             return builder;
         }
     }

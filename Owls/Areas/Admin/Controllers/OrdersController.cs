@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Owls.DTOs;
@@ -10,6 +11,8 @@ using Owls.Services.Firebase;
 namespace Owls.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Policy = "AdminOrStaff")]
+
     public class OrdersController : Controller
     {
         private readonly OwlStoreContext _storeContext;

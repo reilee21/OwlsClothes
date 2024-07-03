@@ -1,66 +1,59 @@
-﻿
-@inject SignInManager<OwlsUser> SignInManager
+﻿@inject SignInManager<OwlsUser> SignInManager
 @inject UserManager<OwlsUser> UserManager
 @{
     var user = UserManager.GetUserAsync(User).Result;
     var fullName = user?.FullName ?? "Guest";
 }
 
-
 <div class="header__right__auth">
-    <a >
+    <a>
         <span class="fa fa-user" style="font-size:28px; color:black" aria-hidden="true"></span>
     </a>
     <div class="menu">
         @if (SignInManager.IsSignedIn(User))
         {
             <div class="auth-drop">
-               
                 @if (!User.IsInRole("admin") && !User.IsInRole("staff"))
                 {
-                    <div class="item">
-                        <a href="@Url.Action("Profile","Customer")">@fullName</a>
+                    <div class="item" onclick="window.location.href = '@Url.Action("Profile", "Customer")'">
+                        <a href="@Url.Action("Profile", "Customer")">@fullName</a>
                     </div>
                     <hr />
-                    <div class="item">
-                        <a href="@Url.Action("Orders","Customer")">Đơn hàng</a>
+                    <div class="item" onclick="window.location.href = '@Url.Action("Orders", "Customer")'">
+                        <a href="@Url.Action("Orders", "Customer")">Đơn hàng</a>
                     </div>
                     <hr />
                 }
-                @if (User.IsInRole("admin") )
+                @if (User.IsInRole("admin"))
                 {
-                    <div class="item">
-                        <a href="@Url.Action("Index","Home",new{Area = "Admin"})">Quản lý</a>
+                    <div class="item" onclick="window.location.href = '@Url.Action("Index", "Home", new { Area = "Admin" })'">
+                        <a href="@Url.Action("Index", "Home", new { Area = "Admin" })">Quản lý</a>
                     </div>
                     <hr />
                 }
                 @if (User.IsInRole("staff"))
                 {
-                    <div class="item">
-                        <a href="@Url.Action("Index","Products",new{Area = "Admin"})">Quản lý</a>
+                    <div class="item" onclick="window.location.href = '@Url.Action("Index", "Products", new { Area = "Admin" })'">
+                        <a href="@Url.Action("Index", "Products", new { Area = "Admin" })">Nhân viên</a>
                     </div>
                     <hr />
                 }
-                <div class="item">
-                    <a href="@Url.Action("Logout","Auth")">Đăng xuất</a>
-                 </div>
-        </div>
-
+                <div class="item" onclick="window.location.href = '@Url.Action("Logout", "Auth")'">
+                    <a href="@Url.Action("Logout", "Auth")">Đăng xuất</a>
+                </div>
+            </div>
         }
         else
         {
             <div class="auth-drop">
-                <div class="item">
-                    <a href="@Url.Action("Login","Auth")">Đăng nhập</a>
+                <div class="item" onclick="window.location.href = '@Url.Action("Login", "Auth")'">
+                    <a href="@Url.Action("Login", "Auth")">Đăng nhập</a>
                 </div>
                 <hr />
-                <div class="item">
-                    <a href="@Url.Action("Register","Auth")">Đăng ký</a>
+                <div class="item" onclick="window.location.href = '@Url.Action("Register", "Auth")'">
+                    <a href="@Url.Action("Register", "Auth")">Đăng ký</a>
                 </div>
             </div>
         }
-       
-      
     </div>
-  
 </div>

@@ -73,15 +73,54 @@ namespace Owls.Repositories.OrderRepos
             return true;
         }
 
-        public async Task<IEnumerable<Order>> GetCustomerOrder(string userId)
+        public async Task<PageListResponse<Order>> GetCustomerOrder(string userId, int pageSize, int page)
         {
-            var rs = await _storeContext.Orders.Where(o => o.UserId == userId).ToListAsync();
-            return rs;
+            var ods = await _storeContext.Orders.Include(o => o.OrderDetails).ThenInclude(od => od.ProductVariant).ThenInclude(od => od.Product)
+                .Where(o => o.UserId == userId).ToListAsync();
+            var rs = ods.Skip((page - 1) * pageSize).Take(pageSize);
+            if (rs != null)
+            {
+                foreach (var o in rs)
+                {
+                    foreach (var od in o.OrderDetails)
+                    {
+                        var colorId = od.ProductVariant.ColorId;
+                        if (colorId != null)
+                        {
+                            var color = await _storeContext.Colors.FindAsync(colorId);
+                            od.ProductVariant.Color = color;
+                        }
+                    }
+                }
+
+            }
+            PageListResponse<Order> result = new PageListResponse<Order>
+            {
+                CurrentPage = page,
+                ItemsPerPage = pageSize,
+                TotalItems = ods.Count,
+                Data = rs.ToList()
+            };
+            return result;
         }
 
         public async Task<Order> GetOrderDetail(string orderId)
         {
-            var rs = await _storeContext.Orders.Include(p => p.OrderDetails).FirstOrDefaultAsync(o => o.OrderId.Equals(orderId));
+            var rs = await _storeContext.Orders.Include(p => p.OrderDetails).ThenInclude(od => od.ProductVariant).ThenInclude(od => od.Product)
+                .FirstOrDefaultAsync(o => o.OrderId.Equals(orderId));
+            if (rs != null)
+            {
+                foreach (var od in rs.OrderDetails)
+                {
+                    var colorId = od.ProductVariant.ColorId;
+                    if (colorId != null)
+                    {
+                        var color = await _storeContext.Colors.FindAsync(colorId);
+                        od.ProductVariant.Color = color;
+                    }
+                }
+            }
+
             return rs;
         }
 

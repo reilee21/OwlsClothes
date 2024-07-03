@@ -14,20 +14,7 @@
             $.ajax({
                 url: `/api/BestSeller?type=${type}&take=5`,
                 method: 'GET',
-             //   success: function (data) {
-             //       $('#top-product-chart').empty();
-             //       new Morris.Bar({
-             //           element: 'top-product-chart',
-             //           data: data.map(d => ({
-             //               product: d.productName,
-             //               value: type === 'revenue' ? d.revenue : d.quantity
-             //           })),
-             //           xkey: 'product',
-             //           ykeys: ['value'],
-             //           labels: [type === 'revenue' ? 'Doanh thu' : 'Số lượng'],
-             //           parseTime: false,
-             //       });
-             //   },
+    
                 success: function (data) {
                     var formattedData = data.map((d, index) => ({
                         order: 'Top '+(index + 1),
@@ -50,8 +37,8 @@
                             var valueLabel = type === 'revenue' ? 'Doanh thu' : 'Số lượng';
                             return `<div class='morris-hover-row-label'>${row.name}</div>
                                             <div class='morris-hover-point' style='color: ${options.barColors[0]}'>
-                                                ${valueLabel}: ${row.value}
-                                            </div>`;
+                                                        ${valueLabel}: ` + row.value.toLocaleString() +
+                                            `</div>`;
                         }
                     });
                 },

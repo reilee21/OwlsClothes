@@ -1,0 +1,72 @@
+﻿@page "/customer/orders"
+@using Microsoft.AspNetCore.Identity
+@using Owls.Repositories.OrderRepos
+@inject IOrderRepos OrderRepos
+@inject IHttpContextAccessor HttpContextAccess
+@inject UserManager<OwlsUser> UserManager
+
+@if (UserOrders.Any())
+{
+    <div class="d-flex flex-column gap-2" style="width:100%;">
+        @foreach (var item in UserOrders)
+        {
+            <ItemOrder order="item" />
+        }
+        @if (remain > 0)
+        {
+            <button class="btn btn-primary" @onclick="LoadMoreData">Còn @remain đơn</button>
+        }
+    </div>
+}
+else
+{
+    <div class="container h-50 cart-empty">
+        <h3>
+            BẠN CHƯA ĐẶT ĐƠN HÀNG NÀO
+        </h3>
+        <div class="row justify-content-md-center">
+            <div class="col col-md-auto ">
+                <a href="/" class="p-3 ">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                        <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+                    </svg>
+                    Mua hàng ngay
+                </a>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    public List<Order> UserOrders { get; set; } = new List<Order>();
+    private int PageSize = 5;
+    private int Page { get; set; } = 1;
+    private int remain { get; set; }
+
+    private string uid { get; set; } = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await InitData();
+    }
+
+    public async Task LoadMoreData()
+    {
+        Page++;
+        var more = await OrderRepos.GetCustomerOrder(uid, PageSize, Page);
+        UserOrders.AddRange(more.Data);
+        remain = more.TotalItems - more.CurrentPage * more.ItemsPerPage;
+        StateHasChanged();
+    }
+
+    private async Task InitData()
+    {
+        var us = HttpContextAccess.HttpContext.User;
+        var identityUser = await UserManager.GetUserAsync(us);
+        uid = identityUser.Id;
+
+        var response = await OrderRepos.GetCustomerOrder(uid, PageSize, 1);
+        UserOrders = response.Data;
+        remain = response.TotalItems - response.CurrentPage * response.ItemsPerPage;
+    }
+}
