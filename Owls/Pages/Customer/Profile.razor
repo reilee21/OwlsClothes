@@ -40,7 +40,8 @@
                         </div>
                         <div class="cus_name col-lg-6 col-12">
                             <h6 class="text-sm">Số điện thoại</h6>
-                            <InputText id="cus_phone" class="form-control" @bind-Value="User.PhoneNumber" @oninput="@( (ChangeEventArgs e) =>  HandleChangePhone(e))" />
+                            <InputText maxLength="11"
+                                id="cus_phone" class="form-control" @bind-Value="User.PhoneNumber" @oninput="@( (ChangeEventArgs e) =>  HandleChangePhone(e))" />
                             @if (Errors.ContainsKey("Phone"))
                             {
                                 <h5 class="error">@Errors["Phone"]</h5>
@@ -195,6 +196,15 @@
     private bool Validate()
     {
         ValidateAddress();
+        if (string.IsNullOrWhiteSpace(User.PhoneNumber))
+        {
+            Errors["Phone"] = "Không được để trống";
+        }
+        else if (!Regex.IsMatch(User.PhoneNumber, @"\d[0-9]{9,11}$"))
+        {
+            Errors["Phone"] = "Số điện thoại không hợp lệ";
+
+        }
         return Errors.Any() ? false : true;
     }
     private async Task HandleChangeName(ChangeEventArgs e)
@@ -214,9 +224,15 @@
     private async Task HandleChangePhone(ChangeEventArgs e)
     {
         string value = e.Value.ToString();
-        if (string.IsNullOrWhiteSpace(User.PhoneNumber) || !Regex.IsMatch(User.PhoneNumber, @"^[0-9]{10,11}$"))
+
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            Errors["Phone"] = "Không được để trống";
+        }
+        else if (!Regex.IsMatch(value, @"\d[0-9]{9,11}$"))
         {
             Errors["Phone"] = "Số điện thoại không hợp lệ";
+
         }
         else
         {

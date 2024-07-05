@@ -29,6 +29,25 @@ document.addEventListener('DOMContentLoaded', function () {
             city.options[city.options.length] = new Option(item.Name, item.Id);
         }
         updateShippingFee('');
+        if (uscity) {
+            var c = data.filter((a) => a.Id == uscity)[0];
+            city.value = uscity;
+            updateShippingFee(c.Name)
+            for (var item of c.Districts) {
+                district.options[district.options.length] = new Option(item.Name, item.Id);
+            }
+            if (usdistrict) {
+                var d = c.Districts.filter((d) => d.Id == usdistrict)[0];
+                district.value = usdistrict;
+                for (var item of d.Wards) {
+                    ward.options[ward.options.length] = new Option(item.Name, item.Id);
+                }
+                if (usward) {
+                    var w = d.Wards.filter((w) => w.Id == usward)[0];
+                    ward.value = usward;
+                }
+            }
+        }
 
         city.onchange = () => {
             district.length = 1;

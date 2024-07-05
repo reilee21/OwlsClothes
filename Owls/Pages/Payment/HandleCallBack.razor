@@ -1,0 +1,67 @@
+﻿@page "/payment"
+@using DTOs
+@using Repositories.OrderRepos
+@inject IOrderRepos OrderRepos
+@inject NavigationManager Navigate
+
+<div class="d-flex flex-column justify-content-center align-items-center gap-2">
+    <div class="spinner-border" role="status">
+        <span class="sr-only">Xử lý thanh toán</span>
+    </div>
+    <h4>Đang xử lý thanh toán</h4>
+</div>
+
+
+@code {
+    [Inject]
+    private NavigationManager Navigation { get; set; }
+
+
+    private CallBackPayment CallBack { get; set; } = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var uri = new Uri(Navigation.Uri);
+        var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+
+        if (query.TryGetValue("code", out var code))
+        {
+            CallBack.Code = code;
+        }
+
+        if (query.TryGetValue("id", out var id))
+        {
+            CallBack.Id = id;
+        }
+
+        if (query.TryGetValue("cancel", out var cancel))
+        {
+            CallBack.Cancel = bool.Parse(cancel);
+        }
+
+        if (query.TryGetValue("status", out var status))
+        {
+            CallBack.Status = status;
+        }
+
+        if (query.TryGetValue("orderCode", out var orderCode))
+        {
+            CallBack.OrderCode = orderCode;
+        }
+        await Task.Delay(1500);
+
+        await Process();
+    }
+
+    private async Task Process()
+    {
+        var rs = await OrderRepos.HandleCallBack(CallBack);
+        if (rs)
+        {
+            Navigate.NavigateTo("/payment/success");
+            return;
+        }
+        Navigate.NavigateTo("/payment/cancel");
+    }
+}

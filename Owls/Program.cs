@@ -4,8 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Owls;
 using Owls.Data;
 using Owls.Models;
+using Payment;
+
 
 var builder = WebApplication.CreateBuilder(args).RegisteredServices();
+builder.Services.AddPaymentDI(builder.Configuration);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
@@ -65,6 +68,8 @@ app.MapControllerRoute(
 app.MapRazorPages();
 app.MapBlazorHub();
 app.MapFallbackToPage("/customer/{*catchall}", "/customer/Index");
+app.MapFallbackToPage("/payment/{*catchall}", "/payment/Index");
+
 
 await AccountSeedData.Init(app);
 

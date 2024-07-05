@@ -134,7 +134,11 @@ function updateUIbyColor() {
     var sizeInputs = document.querySelectorAll('.size__btn input');
     var rs = getProductVariantByColor(selectedColor);
     sizeInputs.forEach(function (input) {
-        var size = 'Size '+ input.value;
+        let size = '';
+        if (!input.value.includes("Size")) {
+            size = 'Size '
+        }
+         size += input.value;
         var variantWithSize = rs.find(function (variant) {
             return variant.size === size;
         });
@@ -147,7 +151,9 @@ function updateUIbyColor() {
     });
 }
 function getProductVariantBySize(size) {
-    size = 'Size ' + size;
+    if (!size.includes("Size")) {
+        size = 'Size ' + size;
+    }
     return productVariants.filter(function (variant) {
         if (size == variant.size)
             return variant;
@@ -175,6 +181,8 @@ function getProductVariant() {
 
         }
     }
+
+
     return productVariants.find(function (variant) {
         return variant.colorName === x && variant.size == stemp;
     });

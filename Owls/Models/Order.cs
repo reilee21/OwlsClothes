@@ -17,6 +17,12 @@ namespace Owls.Models
         public string? CustomerPhone { get; set; }
         public string? Address { get; set; }
 
+        public string? PaymentMethod { get; set; }
+        public bool IsPaid { get; set; }
+        public int? TransactionId { get; set; }
+
+
+
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
         public double Total => (SubTotal ?? 0) + (ShippingFee ?? 0);
 

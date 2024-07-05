@@ -5,7 +5,19 @@
 <div class="col-12">
     <div class="card mb-4">
         <div class="card-header pb-0">
-            <h5 class="w-20">Đơn hàng hôm nay: @ViewBag.Pager?.TotalItems</h5>
+            @if(ViewBag.Today == 1)
+            {
+                <h5 class="w-20">Đơn hàng hôm qua: @ViewBag.Pager?.TotalItems</h5>
+            }
+            else
+            {
+                <h5 class="w-20">Đơn hàng hôm nay: @ViewBag.Pager?.TotalItems</h5>
+
+            }
+            <div>
+                <button class="btn bg-gradient-dark" onclick="loadPage(1, 0)">Hôm nay</button>
+                <button class="btn bg-gradient-dark" onclick="loadPage(1, 1)">Hôm qua</button>
+            </div>
         </div>
         @if (Model.Any())
         {
@@ -30,7 +42,7 @@
             </div>
             <nav aria-label="...">
                 <div page-model-admin2="@ViewBag.Pager" page-action="Index" page-classes-enabled="true"
-                     page-class="page-index"
+                     page-class="page-index" page-today="@ViewBag.Today"
                      page-class-selected="active" class="pagination justify-content-center" id="client-pager">
                 </div>
             </nav>
@@ -49,11 +61,11 @@
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script>
-    function loadPage(page) {
+    function loadPage(page,today) {
         $.ajax({
             url: '/Admin/Home/LoadOrders',
             type: 'GET',
-            data: { page: page },
+            data: { page: page,today:today },
             success: function (result) {
                 $('#order-view-component').html(result);
             }

@@ -18,16 +18,15 @@ namespace Owls.Repositories.ManageRepos
 
         public async Task<double> GetRevenueByTime(DateTime from, DateTime to)
         {
-            to.AddDays(1);
+            to = to.AddDays(1);
 
-            var ttorder = await context.Orders.Where(o => o.CreateAt >= from && o.CreateAt < to).Select(o => o.Total).ToListAsync();
+            var ttorder = await context.Orders.Where(o => o.CreateAt.Date >= from.Date && o.CreateAt.Date < to.Date).Select(o => o.Total).ToListAsync();
             double rs = 0;
             if (ttorder.Any())
             {
                 rs = ttorder.Sum();
             }
             return rs;
-
 
         }
 

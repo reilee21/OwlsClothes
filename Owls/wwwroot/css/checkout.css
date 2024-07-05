@@ -97,13 +97,27 @@
     outline: none;
     border: 2px solid #111827;
     background-color: #111827;
-    border-radius:0.2rem;
-    color:white;
-    font-weight:600;
-    text-transform:uppercase;
-
+    border-radius: 0.2rem;
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
 }
 
 form .input-validation-error{
     border:1px solid red;
+}
+
+.paymentlabel{
+    width:100%;
+    border:1px solid #111827;
+    text-align:center;
+    padding:4px;
+    text-transform:uppercase;   
+    border-radius:4px;
+    font-size:14px;
+    font-weight:500
+}
+.paymentlabel.active{
+    background-color:#111827;
+    color:white
 }

@@ -2,10 +2,26 @@
 @inject Repositories.OrderRepos.IOrderRepos OrderRepos
 
 
-<h6 class="p-2"> Đơn hàng: @Order?.OrderId  - <b> @Order?.Status</b></h6>
+<h6 class="p-2"> Đơn hàng: @Order?.OrderId  - <b> @Order?.Status 
+
+        @if(Order != null)
+        {
+            @if (Order.IsPaid)
+            {
+                <span> - Đã thanh toán</span>
+            }
+            else
+            {
+                <span> - Chưa thanh toán</span>
+            }
+        }
+       
+      
+       
+    </b></h6>
 <div class="d-flex flex-column gap-2">
     <div class="d-flex flex-lg-row flex-column gap-2">
-    <div class="card card-body border card-plain border-radius-lg d-flex align-items-start flex-col gap-2 shadow blur">
+    <div class="card card-body border card-plain border-radius-lg d-flex align-items-start flex-col gap-2 shadow blur w-50">
         <div class="row w-100">
             <div class="col-8">
                 <h6 class="mb-0">Tổng sản phẩm:</h6>
@@ -39,7 +55,7 @@
             </div>
         </div>
     </div>
-        <div class="card card-body border card-plain border-radius-lg d-flex align-items-start flex-col gap-2 shadow blur">
+        <div class="card card-body border card-plain border-radius-lg d-flex align-items-start flex-col gap-2 shadow blur w-full">
 
         <div class="row w-100">
             <div class="col-5">

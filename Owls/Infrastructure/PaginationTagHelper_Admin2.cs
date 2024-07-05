@@ -27,6 +27,8 @@ namespace Owls.Infrastructure
         public string PageClass { get; set; } = String.Empty;
         public string PageClassNormal { get; set; } = String.Empty;
         public string PageClassSelected { get; set; } = String.Empty;
+        public int PageToday { get; set; } = 0;
+
         public override void Process(TagHelperContext context,
        TagHelperOutput output)
         {
@@ -37,7 +39,7 @@ namespace Owls.Infrastructure
                 for (int i = 1; i <= PageModelAdmin2.TotalPages; i++)
                 {
                     TagBuilder tag = new TagBuilder("a");
-                    tag.Attributes["onclick"] = $"loadPage({i})";
+                    tag.Attributes["onclick"] = $"loadPage({i},{PageToday})";
                     if (PageClassesEnabled)
                     {
                         tag.AddCssClass(PageClass);

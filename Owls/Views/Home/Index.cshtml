@@ -11,7 +11,11 @@
 <div class="row homepro">
 	@foreach (var product in Model)
 	{
-		<partial name="_ProductCard" model="@product" />
+		<div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
+
+			<partial name="_ProductCard" model="@product" />
+		</div>
+
 	}
 </div>
 

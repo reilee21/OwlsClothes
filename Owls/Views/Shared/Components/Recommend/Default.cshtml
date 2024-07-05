@@ -1,0 +1,12 @@
+﻿@model IEnumerable<ProductBaseInformation>
+<script src="/js/jquery-3.3.1.min.js?v=FgpCb_KJQlLNfOu91ta32o_NMZxltwRo8QtmkMRdAu8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+<script src="~/js/recom.js"></script>
+<div class="rec-slider owl-carousel " style="height:350px">
+    @foreach (var item in Model)
+    {
+        <div class="slider-item" style="height:320px">
+            <partial name="_ProductCard" model="item"/>
+        </div>
+    }
+</div>

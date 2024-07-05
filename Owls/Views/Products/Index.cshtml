@@ -6,7 +6,11 @@
 	<div class="row">
 		@foreach (var product in Model.Products)
 		{
-			<partial name="_ProductCard" model="@product"/>
+			<div class="col-xs-6 col-sm-6 col-md-6 col-lg-3">
+
+				<partial name="_ProductCard" model="@product"/>
+			</div>
+
 		}
 	</div>
 	<partial name="Pagination" />

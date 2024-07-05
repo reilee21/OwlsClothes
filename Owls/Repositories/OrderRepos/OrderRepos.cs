@@ -14,7 +14,7 @@ namespace Owls.Repositories.OrderRepos
             _storeContext = storeContext;
         }
 
-        public async Task<bool> CheckOut(List<CartItem> carts, CheckOutModel model, string userId)
+        public async Task<Order> CheckOut(List<CartItem> carts, CheckOutModel model, string userId)
         {
             double total = 0;
             foreach (var item in carts)
@@ -23,7 +23,7 @@ namespace Owls.Repositories.OrderRepos
                 bool check = await CheckQuantity(item.Sku, item.Quantity);
                 if (!check)
                 {
-                    return false;
+                    return null;
                 }
             }
             int shoppingfee = await GetShippingFee(model.City);
@@ -34,19 +34,25 @@ namespace Owls.Repositories.OrderRepos
                 CreateAt = DateTime.Now,
                 UpdateAt = DateTime.Now,
                 Status = OrderStatus.Status[0],
+                IsPaid = false,
                 SubTotal = total,
                 ShippingFee = shoppingfee,
                 CustomerName = model.CutomerName,
                 CustomerPhone = model.PhoneNumber,
+                PaymentMethod = model.PaymentMethod,
                 Address = model.Address + ", " + model.Ward + ", " + model.Dicstrict + ", " + model.City
             };
+            if (model.PaymentMethod == PaymentMethod.BANK.ToString())
+            {
+                order.TransactionId = GenerateTransactionId();
+            }
             try
             {
                 _storeContext.Orders.Add(order);
             }
             catch
             {
-                return false;
+                return null;
             }
             foreach (var item in carts)
             {
@@ -67,16 +73,16 @@ namespace Owls.Repositories.OrderRepos
                 {
                     _storeContext.OrderDetails.Add(detail);
                 }
-                catch { return false; }
+                catch { return null; }
             }
             await _storeContext.SaveChangesAsync();
-            return true;
+            return order;
         }
 
         public async Task<PageListResponse<Order>> GetCustomerOrder(string userId, int pageSize, int page)
         {
             var ods = await _storeContext.Orders.Include(o => o.OrderDetails).ThenInclude(od => od.ProductVariant).ThenInclude(od => od.Product)
-                .Where(o => o.UserId == userId).ToListAsync();
+                .Where(o => o.UserId == userId).OrderByDescending(o => o.CreateAt).ToListAsync();
             var rs = ods.Skip((page - 1) * pageSize).Take(pageSize);
             if (rs != null)
             {
@@ -136,6 +142,42 @@ namespace Owls.Repositories.OrderRepos
             if (pr == null) return false;
             return quantity <= pr.Quantity;
         }
+        public int GenerateTransactionId()
+        {
+            Random rand = new Random();
+            int Id; bool valid = false;
 
+            do
+            {
+                Id = rand.Next(100000, 9999999);
+                var od = _storeContext.Orders.FirstOrDefault(d => d.TransactionId == Id);
+                if (od == null) valid = true;
+            } while (!valid);
+
+            return Id;
+        }
+
+        public async Task<bool> HandleCallBack(CallBackPayment callBackPayment)
+        {
+            if (callBackPayment.Code == "00")
+            {
+                int transcallback = int.Parse(callBackPayment.OrderCode);
+                var od = await _storeContext.Orders.FirstOrDefaultAsync(o => o.TransactionId.HasValue && o.TransactionId.Value.Equals(transcallback));
+                if (od == null) { return false; }
+
+                if (callBackPayment.Cancel)
+                {
+                    od.Status = OrderStatus.Status.GetValueOrDefault(3);
+                    _storeContext.Entry(od).State = EntityState.Modified;
+                    await _storeContext.SaveChangesAsync();
+                    return false;
+                }
+                od.IsPaid = true;
+                _storeContext.Entry(od).State = EntityState.Modified;
+                await _storeContext.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
     }
 }

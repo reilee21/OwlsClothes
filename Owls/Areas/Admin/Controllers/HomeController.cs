@@ -31,8 +31,8 @@ namespace Owls.Areas.Admin.Controllers
         [Route("/api/GetRevenueByTime")]
         public async Task<IActionResult> GetRevenue(DateTime from, DateTime to, string range)
         {
-            var rvn = context.Orders.Where(o => o.CreateAt >= from && o.CreateAt <= to);
-
+            var rvn = context.Orders.Where(o => o.CreateAt >= from && o.CreateAt <= to.AddDays(1));
+            var test = rvn.ToList();
             IEnumerable<RevenueRs> revenues;
             if (range == "day")
             {
@@ -107,9 +107,9 @@ namespace Owls.Areas.Admin.Controllers
 
         }
 
-        public IActionResult LoadOrders(int page = 1, int pageSize = 3)
+        public IActionResult LoadOrders(int page = 1, int pageSize = 5, int today = 0)
         {
-            return ViewComponent("NewOrders", new { page, pageSize });
+            return ViewComponent("NewOrders", new { page, pageSize, today });
         }
 
 

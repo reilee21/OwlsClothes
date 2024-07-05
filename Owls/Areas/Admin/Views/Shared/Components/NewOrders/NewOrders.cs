@@ -13,11 +13,14 @@ namespace Owls.Areas.Admin.Views.Shared.Components.NewOrders
         {
             _storeContext = storeContext;
         }
-        public async Task<IViewComponentResult> InvokeAsync(int page = 1, int pagesize = 3)
+        public async Task<IViewComponentResult> InvokeAsync(int page = 1, int pagesize = 5, int today = 0)
         {
             var qr = _storeContext.Orders.AsQueryable();
             DateTime now = DateTime.Now;
-            //DateTime now = new DateTime(2024, 6, 8);
+            if (today == 1)
+            {
+                now = now.AddDays(-1);
+            }
             qr = qr.Where(o => o.CreateAt.Date == now.Date);
 
             var newOrders = await qr
@@ -33,6 +36,8 @@ namespace Owls.Areas.Admin.Views.Shared.Components.NewOrders
                 ItemsPerPage = pagesize,
             };
             ViewBag.Pager = pager;
+            ViewBag.Today = today;
+
 
             return View(newOrders);
         }

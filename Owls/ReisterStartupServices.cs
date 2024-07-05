@@ -5,6 +5,7 @@ using Owls.Repositories.OrderRepos;
 using Owls.Repositories.ProductRepos;
 using Owls.Services.Firebase;
 using Owls.Services.Mail;
+using Owls.Services.Payment;
 
 namespace Owls
 {
@@ -19,9 +20,11 @@ namespace Owls
             builder.Services.AddScoped<IColorRepos, ColorRepos>();
             builder.Services.AddScoped<IOrderRepos, OrderRepos>();
             builder.Services.AddScoped<IManageRepos, ManageRepos>();
+
             builder.Services.AddTransient<IFirebaseStorage, FirebaseStorageService>();
             builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
             builder.Services.AddTransient<IEmailService, EmailService>();
+            builder.Services.AddTransient<IPayment, PaymentSV>();
 
 
 

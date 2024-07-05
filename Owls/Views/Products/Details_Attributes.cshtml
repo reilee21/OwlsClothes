@@ -4,7 +4,10 @@
     var colors = new List<string>() {};
     foreach (var item in Model.ProductVariants)
     {
-        prosizes.Add(item.Size);
+        if (!prosizes.Contains(item.Size) && !string.IsNullOrEmpty(item.Size))
+        {
+            prosizes.Add(item.Size);
+        }
         string cl = String.IsNullOrEmpty(item.ColorName) ? "Mặc định" : item.ColorName ;
         
         if (!colors.Contains(cl))
@@ -66,7 +69,7 @@
             </li>
             <li>
                 <div class="row">
-                    @if (available_size.Any() || Model.ProductVariants.Count>1)
+                    @if (available_size.Any() || prosizes.Any())
                     {
                         <div class="col-lg-3">
                             <span class="attri">Sizes:</span>
@@ -88,13 +91,13 @@
                             }
                             else
                             {
-                                @foreach (var item in Model.ProductVariants)
+                                @foreach (var item in prosizes)
                                 {
-                                    <label for="@item.Size">    
+                                    <label for="@item">    
 
-                                        <input type="radio" id="@item.Size" name="size" onclick="updateSelectedSize('@item.Size')" value="@item.Size" )>
+                                        <input type="radio" id="@item" name="size" onclick="updateSelectedSize('@item')" value="@item" )>
                                         <span>
-                                            @item.Size
+                                            @item
 
                                         </span>
                                     </label>

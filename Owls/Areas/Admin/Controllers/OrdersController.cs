@@ -96,6 +96,8 @@ namespace Owls.Areas.Admin.Controllers
             Order order = await _storeContext.Orders.FindAsync(o.OrderId);
             if (order == null) return RedirectToAction("Index");
             order.Status = o.Status;
+            order.IsPaid = o.IsPaid;
+            order.UpdateAt = DateTime.Now;
             _storeContext.Entry(order).State = EntityState.Modified;
             await _storeContext.SaveChangesAsync();
             return RedirectToAction("Details", new { orderId = o.OrderId });

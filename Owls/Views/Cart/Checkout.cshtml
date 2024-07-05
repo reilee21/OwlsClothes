@@ -33,7 +33,7 @@
                                     <div class="col-3">[@cl[(int)@item.Color]]</div>
                                 }
                             </div>
-                            <div class="col-12 price">@item.Price</div>
+                            <div class="col-12 price">@Money.Cast((int)item.Price)</div>
 
                         </div>
                     </div>
@@ -103,19 +103,53 @@
                     <h6 class="col-6 font-weight-bold" id="totalprice"> --- </h6>
                 </div>
                 <div class="row">
+                    <hr />
+                </div>
+                <div class="d-flex flex-column gap-2">
+                    <payment-method asp-for="PaymentMethod" value="COD" label="Thanh toán khi nhận hàng"></payment-method>
+                    <payment-method asp-for="PaymentMethod" value="BANK" label="Thanh toán ngân hàng"></payment-method>
+                </div>
+               
+                <div class="row">
+                    <hr />
+                </div>
+                <div class="row">
                     <button type="submit"> Thanh toán</button>
                 </div>
             </div>
         </form>
     </div>
 </div>
+<script>
 
+    const paymentMethodCOD = document.getElementById('PaymentMethod_COD');
+    const paymentMethodBANK = document.getElementById('PaymentMethod_BANK');
 
+    paymentMethodCOD.addEventListener('change', function () {
+        if (this.checked) {
+            document.querySelector('.paymentlabel.active').classList.remove('active');
+            document.querySelector('label[for="PaymentMethod_COD"]').classList.add('active');
+        }
+    });
+
+    paymentMethodBANK.addEventListener('change', function () {
+        if (this.checked) {
+            document.querySelector('.paymentlabel.active').classList.remove('active');
+            document.querySelector('label[for="PaymentMethod_BANK"]').classList.add('active');
+        }
+    });
+
+</script>
 
 
 
 <script>
     var shipFee = @Html.Raw(Json.Serialize(ViewBag.ShippingFees));
     var stt = @Html.Raw(Json.Serialize(ViewBag.SubTotal));
+
+    var uscity = "@Html.Raw(Model.City)";
+    var usdistrict = "@Html.Raw(Model.Dicstrict)";
+    var usward = "@Html.Raw(Model.Ward)";
+
 </script>
 

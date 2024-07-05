@@ -100,21 +100,26 @@ namespace Owls.Repositories.ProductRepos
                                select new
                                {
                                    ProductId = grouped.Key.ProductId
-                               }).Take(count).ToList();
+                               }).ToList();
 
             if (!topProducts.Any())
             {
-                return await _storeContext.Products.Take(count).ToListAsync();
+                return await _storeContext.Products.Where(p => p.IsActive == true).Take(count).ToListAsync();
             }
-
             List<Product> rs = new List<Product>();
-
-            foreach (var product in topProducts)
+            foreach (var item in topProducts)
             {
-                var p = await _storeContext.Products.Include(p => p.ProductVariants).FirstOrDefaultAsync(p => p.ProductId.Equals(product.ProductId) && p.IsActive == true);
+                var p = await _storeContext
+                    .Products.Include(p => p.ProductVariants)
+                    .FirstOrDefaultAsync(p => p.ProductId.Equals(item.ProductId) && p.IsActive == true);
                 if (p != null)
+                {
                     rs.Add(p);
+                    if (rs.Count == count) break;
+                }
+
             }
+
 
             return rs;
         }
