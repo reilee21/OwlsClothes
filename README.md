@@ -36,7 +36,7 @@ Account
 - Profile =>  done
 User
 - Cart => done
-- Checkout => done
+- Checkout (apply Voucher)=>  done
 - Get User orders => order details =>  done
 
 Product
@@ -57,7 +57,9 @@ Admin
 - Others
 --- ShippingFee Edit => done
 --- Color CRUD => done
-
+- Discount
+--- Voucher => CRUD 
+--- Promotion => CRUD
 - Profile | show + update => done
 - ChangePass by email => done
 
@@ -65,5 +67,4 @@ Admin
 --------
 Authorization  =>  done
 Online payment => done
- ----ADDING DATA ORDER PEDING....
 ```
