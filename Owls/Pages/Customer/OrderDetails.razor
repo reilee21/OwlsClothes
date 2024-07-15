@@ -1,6 +1,7 @@
 ﻿@page "/customer/orders/{orderId}"
 @inject Repositories.OrderRepos.IOrderRepos OrderRepos
 
+<Title PageTitle="- Chi tiết đơn hàng" />
 
 <h6 class="p-2"> Đơn hàng: @Order?.OrderId  - <b> @Order?.Status 
 
@@ -46,6 +47,18 @@
                 <h6 class="mb-0">@Order?.ShippingFee?.ToString("#,###") đ</h6>
             </div>
         </div>
+            @if(Order?.VoucherDiscount > 0)
+            {
+                <div class="row w-100">
+                    <div class="col-6">
+                        <h6 class="mb-0">Voucher giảm: </h6>
+                    </div>
+                    <div class="col-6 text-end">
+                        <h6 class="mb-0">- @Order?.VoucherDiscount?.ToString("#,###") đ</h6>
+                    </div>
+                </div>
+            }
+            
         <div class="row w-100">
             <div class="col-6">
                 <h6 class="mb-0"><b>Tổng: </b></h6>

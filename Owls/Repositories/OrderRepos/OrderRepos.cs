@@ -19,13 +19,14 @@ namespace Owls.Repositories.OrderRepos
             double total = 0;
             foreach (var item in carts)
             {
-                total += (double)(item.Quantity * item.Price);
+                total += (double)(item.Quantity * item.Price * (1 - item.Discount / 100));
                 bool check = await CheckQuantity(item.Sku, item.Quantity);
                 if (!check)
                 {
                     return null;
                 }
             }
+
             int shoppingfee = await GetShippingFee(model.City);
             Order order = new Order()
             {
@@ -40,20 +41,41 @@ namespace Owls.Repositories.OrderRepos
                 CustomerName = model.CutomerName,
                 CustomerPhone = model.PhoneNumber,
                 PaymentMethod = model.PaymentMethod,
-                Address = model.Address + ", " + model.Ward + ", " + model.Dicstrict + ", " + model.City
+                Address = model.Address + ", " + model.Ward + ", " + model.Dicstrict + ", " + model.City,
+                VoucherDiscount = 0,
             };
+            if (!string.IsNullOrEmpty(model.Voucher))
+            {
+                var voucher = await _storeContext.Vouchers.FirstOrDefaultAsync(v => v.Name.ToUpper().Equals(model.Voucher.ToUpper()));
+                if (voucher == null || voucher.Quantity < 1 || !voucher.IsActive)
+                    return null;
+                try
+                {
+                    voucher.Quantity -= 1;
+                    if (voucher.Quantity < 1)
+                        voucher.IsActive = false;
+                    _storeContext.Entry(voucher).State = EntityState.Modified;
+                }
+                catch (Exception ex)
+                {
+                    return null;
+                }
+                order.VoucherId = voucher.Id;
+                if (voucher.Type == "Phần trăm")
+                {
+                    order.VoucherDiscount = order.SubTotal * voucher.Value / 100;
+                }
+                else
+                {
+                    order.VoucherDiscount = voucher.Value;
+                }
+            }
+
             if (model.PaymentMethod == PaymentMethod.BANK.ToString())
             {
                 order.TransactionId = GenerateTransactionId();
             }
-            try
-            {
-                _storeContext.Orders.Add(order);
-            }
-            catch
-            {
-                return null;
-            }
+            order.OrderDetails = new HashSet<OrderDetail>();
             foreach (var item in carts)
             {
                 OrderDetail detail = new OrderDetail()
@@ -62,20 +84,25 @@ namespace Owls.Repositories.OrderRepos
                     Quantity = item.Quantity,
                     Price = item.Price,
                     OrderId = order.OrderId,
-
+                    Discount = item.Discount.HasValue ? item.Discount.Value : 0,
                 };
-                // Remove after test
-                /* var productVariant = await _storeContext.ProductVariants.SingleOrDefaultAsync(pv => pv.Sku == item.Sku);
-                 productVariant.Quantity -= item.Quantity;
-                 _storeContext.ProductVariants.Update(productVariant);*/
-
-                try
-                {
-                    _storeContext.OrderDetails.Add(detail);
-                }
-                catch { return null; }
+                order.OrderDetails.Add(detail);
+                var productVariant = await _storeContext.ProductVariants.SingleOrDefaultAsync(pv => pv.Sku == item.Sku);
+                productVariant.Quantity -= item.Quantity;
+                _storeContext.Entry(productVariant).State = EntityState.Modified;
             }
-            await _storeContext.SaveChangesAsync();
+
+
+            try
+            {
+                _storeContext.Orders.Add(order);
+                await _storeContext.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                Console.WriteLine("----------------------------------------" + ex.InnerException?.Message);
+                return null;
+            }
             return order;
         }
 
@@ -139,19 +166,22 @@ namespace Owls.Repositories.OrderRepos
         private async Task<bool> CheckQuantity(string sku, int quantity)
         {
             var pr = await _storeContext.ProductVariants.FindAsync(sku);
-            if (pr == null) return false;
+            if (pr == null)
+                return false;
             return quantity <= pr.Quantity;
         }
         public int GenerateTransactionId()
         {
             Random rand = new Random();
-            int Id; bool valid = false;
+            int Id;
+            bool valid = false;
 
             do
             {
                 Id = rand.Next(100000, 9999999);
                 var od = _storeContext.Orders.FirstOrDefault(d => d.TransactionId == Id);
-                if (od == null) valid = true;
+                if (od == null)
+                    valid = true;
             } while (!valid);
 
             return Id;
@@ -162,13 +192,34 @@ namespace Owls.Repositories.OrderRepos
             if (callBackPayment.Code == "00")
             {
                 int transcallback = int.Parse(callBackPayment.OrderCode);
-                var od = await _storeContext.Orders.FirstOrDefaultAsync(o => o.TransactionId.HasValue && o.TransactionId.Value.Equals(transcallback));
-                if (od == null) { return false; }
+                var od = await _storeContext.Orders.Include(od => od.OrderDetails)
+                    .FirstOrDefaultAsync(o => o.TransactionId.HasValue && o.TransactionId.Value.Equals(transcallback));
+                if (od == null)
+                { return false; }
 
-                if (callBackPayment.Cancel)
+                if (callBackPayment.Cancel) // đơn huỷ 
                 {
-                    od.Status = OrderStatus.Status.GetValueOrDefault(3);
+                    List<ProductVariant> updatedVariants = new List<ProductVariant>();
+
+                    foreach (var pro in od.OrderDetails) // trả lại số lượng hàng
+                    {
+                        var pro_variant = await _storeContext.ProductVariants.FindAsync(pro.Sku);
+                        pro_variant.Quantity += pro.Quantity;
+                        updatedVariants.Add(pro_variant);
+
+                    }
+                    od.Status = OrderStatus.Status.GetValueOrDefault(3); // trạng thái đơn
+
+                    if (od.VoucherId.HasValue)
+                    {
+                        var voucher = await _storeContext.Vouchers.FindAsync(od.VoucherId);
+                        voucher.Quantity += 1;
+                        _storeContext.Entry(voucher).State = EntityState.Modified;
+                    }
+
                     _storeContext.Entry(od).State = EntityState.Modified;
+                    _storeContext.ProductVariants.UpdateRange(updatedVariants);
+
                     await _storeContext.SaveChangesAsync();
                     return false;
                 }

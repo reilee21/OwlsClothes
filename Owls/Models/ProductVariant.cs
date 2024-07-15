@@ -1,11 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Owls.Models
 {
     public partial class ProductVariant
     {
+        public ProductVariant()
+        {
+            Promotions = new HashSet<Promotion>();
+        }
+
         [Key]
         public string Sku { get; set; } = null!;
         public int? ProductId { get; set; }
@@ -18,5 +21,7 @@ namespace Owls.Models
         public virtual Color? Color { get; set; }
         public virtual Product? Product { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        public virtual ICollection<Promotion> Promotions { get; set; }
+
     }
 }

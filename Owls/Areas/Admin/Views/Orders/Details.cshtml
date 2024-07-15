@@ -43,8 +43,16 @@
                                     <h6 class="mb-0"> @Money.Cast((int)Model.ShippingFee)</h6>
                                 </div>
                             </div>
+                            <div class="row w-100">
+                                <div class="col-6">
+                                    <h6 class="mb-0">Voucher: </h6>
+                                </div>
+                                <div class="col-6 text-end">
+                                    <h6 class="mb-0"> @Money.Cast((int)Model.VoucherDiscount)</h6>
+                                </div>
+                            </div>
                             @{
-                                var total = Model.SubTotal + Model.ShippingFee;
+                                var total = Model.SubTotal + Model.ShippingFee - Model.VoucherDiscount;
                             }
                             <div class="row w-100">
                                 <div class="col-6">
@@ -203,6 +211,8 @@
 <script src="/js/jquery-3.3.1.min.js?v=FgpCb_KJQlLNfOu91ta32o_NMZxltwRo8QtmkMRdAu8"></script>
 <script>
     $('#btnSetActive').click(function () {
+        if (statusSelect.value === 'Đã huỷ') return;
+
         var va = $('#dataActive').val();
         if (va === "true") {
             $('#dataActive').val("false");
@@ -218,6 +228,7 @@
         var isPaidCheckbox = document.getElementById('dataActive');
 
         function updateIsPaidCheckbox() {
+
             if (statusSelect.value === 'Đã giao hàng') {
                 $('#dataActive').val("true");
                 isPaidCheckbox.checked = true;
@@ -228,9 +239,19 @@
 
             }
         }
-
+        function checkCancelStatus() {
+            if (statusSelect.value === 'Đã huỷ') {
+                statusSelect.disabled = true;
+                isPaidCheckbox.disabled = true;
+            } else {
+                statusSelect.disabled = false;
+                isPaidCheckbox.disabled = false;
+            }
+        }
         statusSelect.addEventListener('change', function () {
             updateIsPaidCheckbox();
+            checkCancelStatus();
         });
+        checkCancelStatus();
     });
 </script>

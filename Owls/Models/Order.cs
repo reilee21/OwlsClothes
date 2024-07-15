@@ -12,6 +12,7 @@ namespace Owls.Models
         public DateTime? UpdateAt { get; set; }
         public string? Status { get; set; }
         public double? SubTotal { get; set; }
+        public double? VoucherDiscount { get; set; }
         public double? ShippingFee { get; set; }
         public string? CustomerName { get; set; }
         public string? CustomerPhone { get; set; }
@@ -21,10 +22,12 @@ namespace Owls.Models
         public bool IsPaid { get; set; }
         public int? TransactionId { get; set; }
 
+        public int? VoucherId { get; set; }
+        public Voucher Voucher { get; set; }
 
 
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
-        public double Total => (SubTotal ?? 0) + (ShippingFee ?? 0);
+        public double Total => (SubTotal ?? 0) + (ShippingFee ?? 0) - (VoucherDiscount ?? 0);
 
     }
 }

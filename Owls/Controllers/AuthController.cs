@@ -19,10 +19,18 @@ namespace Owls.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login() => View();
+        public IActionResult Login()
+        {
+            ViewBag.Title = "- Đăng nhập";
+            return View();
+        }
 
         [HttpGet]
-        public IActionResult Register() => View();
+        public IActionResult Register()
+        {
+            ViewBag.Title = "- Đăng ký";
+            return View();
+        }
 
         [HttpPost]
         public async Task<IActionResult> Login(UserLogin user)

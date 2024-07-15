@@ -88,7 +88,22 @@
             @for (int i = 0; i < Model.Varriants.Count; i++)
             {
                 <div class="variant">
-                    <h4>Thuộc tính @(i + 1)</h4>
+                    <h4>Thuộc tính @(i + 1) </h4>
+                    @if (Model.Varriants[i].Promotions.Any())
+                    {
+                        <div class="d-flex flex-wrap gap-2 align-items-center">
+                            <label>Khuyến mãi: </label>
+                            @foreach (var p in Model.Varriants[i].Promotions)
+                            {
+                                <div class="border-1 border-radius-lg border-dark p-1" style="border:solid">
+                                    <label>@p.Name (@p.DiscountPercentage %)</label>
+                                </div>
+
+                            }
+                        </div>
+                    }
+                   
+
                     <div class="row">
                         <div class="form-group col-12 col-lg-4">
                             <label> SKU</label>
@@ -169,7 +184,6 @@
         } else {
             $('#dataActive').val("true");
         }
-        console.log($('#dataActive').val());
     });
 </script>
 

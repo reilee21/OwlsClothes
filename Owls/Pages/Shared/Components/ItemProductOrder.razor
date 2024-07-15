@@ -26,8 +26,15 @@
 
         </p>
     </div>
+    @if (orderdetail.Discount > 0)
+    {
+        <h6 class="text-nowrap text-decoration-line-through text-black-50">
+            @orderdetail.Price.Value.ToString("#,###") đ
+        </h6>
+    }
+ 
     <h6 class="text-nowrap">
-        @orderdetail.Price.Value.ToString("#,###") đ
+        @Price.ToString("#,###") đ
     </h6>
 </div>
 
@@ -40,11 +47,17 @@
 
     private string? Size { get; set; }
     private string? Color { get; set; }
+    private double Price { get; set; } = 0;
 
     protected async override Task OnInitializedAsync()
     {
         await LoadImage();
         var x = orderdetail.ProductVariant.Color;
+
+        if (orderdetail.Price.HasValue && orderdetail.Discount.HasValue)
+        {
+            Price = (double)orderdetail.Price.Value * (1 - (double)orderdetail.Discount.Value / 100);
+        }
     }
     public async Task LoadImage()
     {

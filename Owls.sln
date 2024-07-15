@@ -5,7 +5,7 @@ VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Owls", "Owls\Owls.csproj", "{CB9CCF93-5E1B-4983-89B7-DDD64E6675EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Payment", "Payment\Payment.csproj", "{D24F279A-415F-4A02-9A41-344BCD883999}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Payment", "Payment\Payment.csproj", "{D24F279A-415F-4A02-9A41-344BCD883999}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

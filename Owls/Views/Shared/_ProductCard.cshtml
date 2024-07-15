@@ -1,18 +1,23 @@
 ﻿@model ProductBaseInformation 
 
 	<div class="single-product mb-20">
-		<div class="product-img img-full ">
+		<div class="product-img img-full position-relative">
 			<a href="@Url.Action("ProductDetails","Products",new{proName = Model.Name})" title="@Model.Name">
 				<img class="lazyload" src="@Model.Imagethumbnail" alt="@Model.Name">
 			</a>
-		</div>
+		@if(Model.TotalDiscount > 0)
+		{
+			<span style="border-radius: 50px ; border:1px solid black ; top:0; right:12px;"
+				  class="position-absolute  text-sm text-nowrap bg-dark text-white px-2">@Model.TotalDiscount %</span>
+
+		}
+			</div>
 		<div class="product-content">
 			<h3><a href="@Url.Action("ProductDetails","Products",new{ proName = Model.Name})" title="@Model.Name">@Model.Name</a></h3>
 			<div class="product-price">
 				<div class="price-box">
 					<center>
-						<span class="regular-price">@Money.Cast(Model.Price)</span>
-
+						<span class="regular-price">@Money.Cast(Model.Price)</span>	
 					</center>
 				</div>
 			</div>

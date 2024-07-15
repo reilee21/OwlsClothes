@@ -5,6 +5,10 @@
 @inject IHttpContextAccessor HttpContextAccess
 @inject UserManager<OwlsUser> UserManager
 
+
+<Title PageTitle="- Đơn hàng"/>
+
+
 @if (UserOrders.Any())
 {
     <div class="d-flex flex-column gap-2" style="width:100%;">
@@ -48,6 +52,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         await InitData();
+
     }
 
     public async Task LoadMoreData()

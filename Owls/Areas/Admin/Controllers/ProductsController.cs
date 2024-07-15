@@ -27,7 +27,8 @@ namespace Owls.Areas.Admin.Controllers
         }
         public async Task<IActionResult> Index(int? page, string? search, int? cate)
         {
-            if (page == null) page = 1;
+            if (page == null)
+                page = 1;
             ViewBag.Nav = "Products";
             IEnumerable<Product> rs = new List<Product>();
             if (!string.IsNullOrEmpty(search) && cate != null)
@@ -163,10 +164,11 @@ namespace Owls.Areas.Admin.Controllers
         {
 
             Product pro = await _storeContext.Products
-                                            .Include(p => p.ProductVariants)
+                                            .Include(p => p.ProductVariants).ThenInclude(v => v.Promotions)
                                             .Include(p => p.ProductImages)
                                             .FirstOrDefaultAsync(p => p.ProductId.Equals(productId));
-            if (pro == null) return RedirectToAction("Index");
+            if (pro == null)
+                return RedirectToAction("Index");
             var cate = await _storeContext.Categories.ToListAsync();
             var colors = await _storeContext.Colors.Select(c => new { c.ColorId, c.ColorName }).ToListAsync();
             ProductWrite proWrite = mapper.Map<ProductWrite>(pro);
@@ -311,10 +313,12 @@ namespace Owls.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> RemoveVariant(string? sku)
         {
-            if (string.IsNullOrEmpty(sku)) return NotFound();
+            if (string.IsNullOrEmpty(sku))
+                return NotFound();
 
             ProductVariant variant = await _storeContext.ProductVariants.FindAsync(sku);
-            if (variant == null) return NotFound();
+            if (variant == null)
+                return NotFound();
             try
             {
                 _storeContext.ProductVariants.Remove(variant);

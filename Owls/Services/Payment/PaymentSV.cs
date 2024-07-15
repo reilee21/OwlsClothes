@@ -18,11 +18,10 @@ namespace Owls.Services.Payment
         {
 
             int transId = (int)order.TransactionId;
-
             PaymentData paymentData = new PaymentData
             (
-                //amount: (int)order.Total,
-                amount: 5000,
+                amount: (int)order.Total,
+                //amount: 5000,
                 orderCode: transId,
                 items: null,
                 description: $"Thanh toan Owls Clothes",

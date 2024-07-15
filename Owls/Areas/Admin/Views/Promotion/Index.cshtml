@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Promotion>
+
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-header pb-0">
+                <h5 class="w-20">Khuyến mãi</h5>
+                <form asp-area="Admin" asp-controller="Promotion" asp-action="Index" method="get" id="filterForm">
+                    <div class="d-flex flex-row gap-2">
+                        <input class="form-control" type="text" id="searchInput" name="search" value="@ViewBag.SearchString" placeholder="Tên khuyễn mãi...">
+                        <button class="btn btn-outline-primary btn-sm mb-0 " id="filterButton" type="submit">Tìm</button>
+                    </div>
+                </form>
+
+                <a type="button" class="btn bg-gradient-dark" 
+                    asp-area="admin" asp-controller="promotion" asp-action="create"
+                >
+                    Thêm mới
+                </a>
+
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+                <div class="table-responsive p-0">
+                    <table id="productsTable" class="table align-items-center mb-0">
+                        <thead>
+                            <tr>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tên chương trình</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Phần trăm giảm</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Bắt đầu</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"> Kết thúc</th>
+                                <th class="text-secondary opacity-7"></th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <partial name="_Promotion" model="item" />
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

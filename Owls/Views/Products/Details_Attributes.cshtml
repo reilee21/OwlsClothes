@@ -30,7 +30,12 @@
 
 <div class="product__details__text">
     <h3>@Model.Name</h3>
-    <div class="product__details__price"><span id="dis_sale_price">@Money.Cast(Model.Price)</span> <span id="sale_price"></span></div>
+    <div class="product__details__price d-flex align-items-center gap-2"><span id="dis_sale_price">@Money.Cast(Model.Price)</span>
+        <span id="sale_price"></span> 
+        <h5 id="pro_discount" style="border-radius: 50px ; font-size:14px "
+            class=" text-nowrap bg-dark text-white">
+        </h5>
+    </div>
     <div class="product__details__button">
         <div class="quantity">
             <span>Số lượng:</span>
@@ -45,7 +50,7 @@
         <ul>
 
             <li>
-                @if (colors.Count() > 1)
+                @if (colors.Count() >= 1)
                 {
                     <div class="row">
                         <div class="col-lg-3">

@@ -33,7 +33,23 @@
                                     <div class="col-3">[@cl[(int)@item.Color]]</div>
                                 }
                             </div>
-                            <div class="col-12 price">@Money.Cast((int)item.Price)</div>
+                            <div class="col-12 price d-flex gap-2">
+                                @if (item.Discount > 0)
+                                {
+                                    <h6 class="text-decoration-line-through text-black-50 ">
+                                        @Money.Cast((int)item.Price)
+                                    </h6>
+                                }
+
+                                <h5 style="color: #535C91; font-size: 16px; font-weight: 600;">
+                                    @{
+                                        var price = item.Price * (1 - item.Discount / 100);
+                                    }
+
+                                    @price.Value.ToString("#,###") đ
+                                </h5>
+                               
+                            </div>
 
                         </div>
                     </div>
@@ -41,7 +57,7 @@
                 
             </div>
         </div>
-        <form class="col-lg-6 col-md-12" asp-action="Checkout" asp-controller="Cart" method="post">
+        <form class="col-lg-6 col-md-12" asp-action="Checkout" asp-controller="Cart" method="post" id="checkoutform">
             <div class="payment">
                 <div class="row">
                     <div class="cus_name col-lg-6 col-12">
@@ -89,11 +105,26 @@
                 <div class="row">
                     <hr />
                 </div>
+                <div class="">
+                    <div class="d-flex flex-row gap-2 px-2 align-items-center">
+                        <input id="vouchercode" class="w-100" style="height:40px" asp-for="Voucher" placeholder="Nhập mã giảm giá" type="text" />
+                        <button type="button" class="w-50" id="applyvoucher"> Áp dụng</button>
+                    </div>
+                    <div class="">
+                        <span id="voucherMessage" class="text-danger text-sm"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <hr />
+                </div>
                 <div class="row subtotal">
                     <h5 class="col-6">Tạm tính : </h5>
                     <h6 class="col-6 font-weight-bold">@Money.Cast((int)subtotal) </h6>
                     <h5 class="col-6">Phí vận chuyển : </h5>
                     <h6 class="col-6 font-weight-bold" id="shipping-fee">123 </h6>
+                    <h5 class="col-6">Voucher : </h5>
+                    <h6 class="col-6 font-weight-bold" id="voucherdiscount">0 </h6>
+
                 </div>
                 <div class="row">
                     <hr/>
@@ -114,7 +145,7 @@
                     <hr />
                 </div>
                 <div class="row">
-                    <button type="submit"> Thanh toán</button>
+                    <button id="submit"> Thanh toán</button>
                 </div>
             </div>
         </form>
@@ -146,10 +177,54 @@
 <script>
     var shipFee = @Html.Raw(Json.Serialize(ViewBag.ShippingFees));
     var stt = @Html.Raw(Json.Serialize(ViewBag.SubTotal));
-
+    let vchdiscount = 0;
     var uscity = "@Html.Raw(Model.City)";
     var usdistrict = "@Html.Raw(Model.Dicstrict)";
     var usward = "@Html.Raw(Model.Ward)";
 
 </script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
+<script>
+    $('#applyvoucher').click(function () {
+        var code = $('#vouchercode').val();
+        var messageSpan = $('#voucherMessage');
+        messageSpan.text('');
+        if (code.length < 1) return;
+        $.ajax({
+            url: '/cart/ApplyVoucher?code=' + code,
+            type: 'GET',
+            success: function (data) {
+                console.log(data)
+                var discount = 0;
+                if (data.type === 'Phần trăm') {
+                    discount = (stt * data.value) / 100;
+                } else {
+                    discount = data.value;
+                }
+
+                $('#voucherdiscount').text(discount.toLocaleString('vi-vn', {style:"currency",currency:"VND"}));
+
+                var newTotal = stt +shippingfee - discount;
+
+                var tt = document.getElementById('totalprice');
+                tt.innerHTML = '' + newTotal.toLocaleString('vi-vn', { style: "currency", currency: "VND" });
+
+
+                messageSpan.removeClass('text-danger').addClass('text-success');
+                messageSpan.text('Áp dụng mã giảm giá thành công!');
+            },
+            error: function (xhr) {
+                messageSpan.removeClass('text-success').addClass('text-danger');
+                messageSpan.text('Mã giảm giá không hợp lệ hoặc đã hết hạn.');
+                setTimeout(() => {
+                    messageSpan.text('');
+                },2000)
+            }
+        });
+
+    });
+    $('#submit').click(function () {
+        $('#checkoutform').submit();
+    });
+</script>

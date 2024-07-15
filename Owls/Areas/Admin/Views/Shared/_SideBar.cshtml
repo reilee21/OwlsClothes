@@ -12,7 +12,7 @@
     <div class="sidenav-header">
         <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
         <a class="navbar-brand m-0" target="_blank">
-            <img src="/image/owls-favicon-color.png" class="navbar-brand-img h-100" alt="main_logo">
+            <img src="/image/icon.png" class="navbar-brand-img h-100" alt="main_logo">
             <span class="ms-1 font-weight-bold">Owls</span>
         </a>
     </div>
@@ -105,7 +105,7 @@
                     <span class="nav-link-text ms-1">Khác</span>
                 </a>
             </li>
-              @if (User.IsInRole("admin"))
+            @if (User.IsInRole("admin"))
             {
                 <li class="nav-item">
                     <a class="nav-link @(ViewBag.Nav == "Accounts" ? "active" : "")" href="@Url.Action("Index","Accounts",new{Area = "Admin"})">
@@ -127,6 +127,28 @@
                     <span class="nav-link-text ms-1">Tài khoản</span>
                 </a>
             </li>}
+            @if (User.IsInRole("admin"))
+            {
+                <li class="nav-item">
+                    <a class="nav-link @(ViewBag.Nav == "Promotion" ? "active" : "")" href="@Url.Action("Index","Promotion",new{Area = "Admin"})">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <partial name="Promotion"/>
+                        </div>
+                        <span class="nav-link-text ms-1">Khuyến mãi</span>
+                    </a>
+                </li>
+            }
+            @if (User.IsInRole("admin"))
+            {
+                <li class="nav-item">
+                    <a class="nav-link @(ViewBag.Nav == "Voucher" ? "active" : "")" href="@Url.Action("Index","Voucher",new{Area = "Admin"})">
+                        <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                           <partial name="VoucherIcon"/>
+                        </div>
+                        <span class="nav-link-text ms-1">Voucher</span>
+                    </a>
+                </li>
+            }
             <li class="nav-item mt-3">
                 <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Tài khoản cá nhân</h6>
             </li>

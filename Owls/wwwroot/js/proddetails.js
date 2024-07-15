@@ -7,7 +7,8 @@ var cartquantity = 0;
 function updateSelectedSize(size) {
 
     selectedSize = size;
-    updateUIbySize(); updatePrice();
+    updateUIbySize();
+    updatePrice();
 
     var labels = document.querySelectorAll('.size__btn label');
 
@@ -27,6 +28,7 @@ function updateSelectedSize(size) {
 function updateSelectedColor(color) {
     selectedColor = color;
     updateUIbyColor(selectedColor);
+    updatePrice();
 
     var labels = document.querySelectorAll('.color__checkbox label');
     labels.forEach(function (label) {      
@@ -45,13 +47,25 @@ function updatePrice() {
 
     var sale_price = document.getElementById('sale_price');
     var sale_price_discount = document.getElementById('dis_sale_price');
+    var pro_discount = document.getElementById('pro_discount');
     var price = pro.salePrice;
-    if (pro.discount != null) {
+    if (pro.totalDiscount != 0) {
         sale_price.textContent = price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
-        price = pro.salePrice * (1 - pro.discount / 100);
+        price = pro.salePrice * (1 - pro.totalDiscount / 100);
         sale_price_discount.textContent = price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+        pro_discount.textContent = pro.totalDiscount + ' %';
+        pro_discount.classList.add('px-3')
+        pro_discount.classList.add('py-1')
+
+
     } else {
-        sale_price_discount = price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+        sale_price_discount.textContent = price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+        sale_price.textContent = '';
+        pro_discount.textContent = '';
+        pro_discount.classList.remove('px-3')
+        pro_discount.classList.remove('py-1')
+
+
     }
 }
 function AddToCart() {
@@ -171,7 +185,7 @@ function getProductVariant() {
     if (selectedColor == null || selectedColor == 'Mặc định') x = null;
     else x = selectedColor;
 
-    var stemp = '';
+    var stemp = null;
     if (selectedSize != null && selectedSize.length > 0) {
         if (selectedSize.startsWith('Size')){
             stemp = selectedSize;
@@ -184,7 +198,7 @@ function getProductVariant() {
 
 
     return productVariants.find(function (variant) {
-        return variant.colorName === x && variant.size == stemp;
+        return variant.colorName === x && (variant.size === stemp || variant.size === '');
     });
 
 }

@@ -20,6 +20,8 @@ namespace Owls.DTOs
         [Required]
         public string Address { get; set; }
         public string PaymentMethod { get; set; } = "COD";
+        public string? Voucher { get; set; }
+
 
         public IEnumerable<CartItem>? Carts { get; set; }
 

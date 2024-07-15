@@ -1,0 +1,25 @@
+﻿@model Promotion
+
+
+
+<tr>
+    <td class="px-4">
+        <h6 class="mb-0 text-sm font-weight-bold text-uppercase">@Model.Name</h6>
+    </td>
+    <td>
+        <h6 class="mb-0 text-sm ">@Model.DiscountPercentage %</h6>
+    </td>
+    <td class="align-middle text-center">
+        <span class="text-secondary text-xs font-weight-bold">@Model.StartDate.Date.ToString("d")</span>
+
+    </td>
+    <td class="align-middle text-center">
+        <span class="text-secondary text-xs font-weight-bold">@Model.EndDate.Date.ToString("d")</span>
+    </td>
+   
+    <td class="align-middle">
+        <a asp-area="admin" asp-controller="promotion" asp-action="edit" asp-route-id="@Model.PromotionId" id="voucheredit" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip"  data-original-title="Edit">
+            Edit
+        </a>
+    </td>
+</tr>

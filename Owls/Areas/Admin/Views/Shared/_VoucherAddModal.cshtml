@@ -1,0 +1,65 @@
+﻿<div class="modal fade" id="addVoucherModal" tabindex="-1" aria-labelledby="addVoucherModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addVoucherModalLabel">Thêm voucher mới</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>  
+            <div class="modal-body">
+                <form id="addVoucherForm" method="post" asp-action="create" asp-area="admin" asp-controller="voucher">
+                    <div class="mb-3">
+                        <label for="voucherName" class="form-label">Mã voucher:</label>
+                        <input type="text" class="form-control" id="voucherName" name="Name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="voucherDescription" class="form-label">Mô tả:</label>
+                        <textarea class="form-control" id="voucherDescription" name="Description" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="voucherType" class="form-label">Loại:</label>
+                        <select class="form-select" id="voucherType" name="Type" required onchange="handleTypeChange()">
+                            <option value="percent">Phần trăm</option>
+                            <option value="amount">Cố định</option>
+                        </select>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <div class="mb-3 w-100">
+                            <label for="voucherValue" class="form-label">Giá trị:</label>
+                            <input type="number" class="form-control" oninput="handleValueChange()"
+                            id="voucherValue" name="Value" step="0.01" required min="0">
+                        </div>
+                        <div class="mb-3  w-100">
+                            <label for="voucherQuantity" class="form-label">Số lượng:</label>
+                            <input oninput="handleQuantityChange()" type="number" class="form-control" id="voucherQuantity" name="Quantity" required min="0">
+                        </div>
+                    </div>
+             
+                    <button type="submit" class="btn btn-primary">Thêm</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function handleTypeChange() {
+        var type = document.getElementById('voucherType').value;
+        var valueInput = document.getElementById('voucherValue');
+        if (type === 'percent') {
+            valueInput.max = 100;
+        } else {
+            valueInput.removeAttribute('max');
+        }
+        valueInput.value = 0
+    }
+    function handleValueChange() {
+        var type = document.getElementById('voucherType').value;
+        var valueInput = document.getElementById('voucherValue');
+        if (type === 'percent') {
+            valueInput.value = valueInput.value > 100 ? 100 : valueInput.value
+        }
+    }
+    function handleQuantityChange() {
+        var valueInput = document.getElementById('voucherQuantity');
+        valueInput.value = valueInput.value < 0 ? 0 : valueInput.value
+    }
+</script>

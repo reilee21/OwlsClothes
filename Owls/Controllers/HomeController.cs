@@ -22,6 +22,7 @@ namespace Owls.Controllers
 
         public async Task<IActionResult> Index()
         {
+            ViewBag.Title = "- Trang chủ";
             List<string> imageUrls = new List<string> { "/image/banner-1.png", "/image/banner-2.png", "/image/banner-3.png", "/image/banner-4.png", "/image/banner-5.png" };
             ViewBag.ImageUrls = imageUrls;
 
@@ -40,11 +41,14 @@ namespace Owls.Controllers
         }
         public IActionResult About()
         {
+            ViewBag.Title = "- About";
 
             return View();
         }
         public IActionResult Contact()
         {
+            ViewBag.Title = "- Contact";
+
             return View();
         }
 

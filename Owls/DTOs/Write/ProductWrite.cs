@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Owls.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Owls.DTOs.Write
 {
@@ -34,6 +35,8 @@ namespace Owls.DTOs.Write
         public double? SalePrice { get; set; }
         [Range(0, int.MaxValue, ErrorMessage = "Số lượng phải từ 0 trở lên")]
         public int? Quantity { get; set; }
+        public virtual ICollection<Promotion> Promotions { get; set; }
+
     }
 
 }

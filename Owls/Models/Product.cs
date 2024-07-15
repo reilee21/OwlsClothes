@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Owls.Models
 {
     public partial class Product
     {
+
 
         [Key]
         public int ProductId { get; set; }
@@ -19,5 +18,6 @@ namespace Owls.Models
         public virtual Category? Category { get; set; }
         public virtual ICollection<ProductImage> ProductImages { get; set; }
         public virtual ICollection<ProductVariant> ProductVariants { get; set; }
+
     }
 }

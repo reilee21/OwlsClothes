@@ -1,0 +1,45 @@
+﻿@model Voucher
+
+
+
+<tr>
+    <td>
+        <h6 class="mb-0 text-xs font-weight-bold">@Model.Name</h6>
+    </td>
+    <td>
+        <h6 class="mb-0 text-sm ">@Model.Type</h6>
+    </td>
+    <td class="align-middle text-center">
+        @if(Model.Type.Equals("Phần trăm"))
+        {
+            <span class="text-secondary text-xs font-weight-bold">
+                @Model.Value %
+            </span>
+        }
+        else
+        {
+             <span class="text-secondary text-xs font-weight-bold">
+                @Model.Value.ToString("#,###")
+            </span>
+        }
+    </td>
+    <td class="align-middle text-center">
+        <span class="text-secondary text-xs font-weight-bold">@Model.Quantity</span>
+    </td>
+    <td class="align-middle text-center">
+        @if (Model.IsActive == true)
+        {
+            <span class="badge badge-sm bg-gradient-success">Hoạt động</span>
+        }
+        else
+        {
+            <span class="badge badge-sm bg-gradient-secondary">Dừng</span>
+        }
+
+    </td>
+    <td class="align-middle">
+        <a href="#" id="voucheredit" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-id="@Model.Id" data-original-title="Edit">
+            Edit
+        </a>
+    </td>
+</tr>

@@ -3,6 +3,7 @@ let district;
 let ward;
 let sfee;
 let totalprice;
+let shippingfee = 0;
 
 document.addEventListener('DOMContentLoaded', function () {
     city = document.getElementById('province');
@@ -16,14 +17,20 @@ document.addEventListener('DOMContentLoaded', function () {
     function updateShippingFee(ct) {
         var shfee = shipFee.find(f => f.city === ct);
         if (shfee) {
-            sfee.innerHTML = '' + shfee.fee.toLocaleString('en-US') +'₫'
-            var p = parseInt(stt) + shfee.fee;
-            totalprice.innerHTML = '' + p.toLocaleString('en-US') + '₫'
+            sfee.innerHTML = '' + shfee.fee.toLocaleString('vi-vn', { style: "currency", currency: "VND" });
+            shippingfee = shfee.fee
+            updateTotal();
         }
-        else
+        else {
+            shippingfee = 0;
             sfee.innerHTML = '---';
+        }
     }
+    function updateTotal() {
+        var newTotal = stt + shippingfee - vchdiscount;
+        totalprice.innerHTML = '' + newTotal.toLocaleString('vi-vn', { style: "currency", currency: "VND" });
 
+    }
     function renderCity(data) {
         for (var item of data) {
             city.options[city.options.length] = new Option(item.Name, item.Id);

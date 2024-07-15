@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title> Owls</title>
-    <link href="/image/owls-favicon-color.png" rel="shortcut icon" />
+    <title> Owls @ViewBag.Title</title>
+    <link href="/image/icon.png" rel="shortcut icon" />
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -25,6 +25,11 @@
     <link rel="stylesheet" href="~/Owls.styles.css" >
 
     <base href="~/"/>
+    <script>
+        function setDocumentTitle(title) {
+            document.title = "Owls " +title;
+        }
+    </script>
 </head>
 
 <body>
@@ -35,6 +40,7 @@
     <div class="container">
             @RenderBody()
     </div>
+ 
     <partial name="_Footer" />
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script asp-append-version="true" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>       
@@ -42,6 +48,7 @@
 
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script asp-append-version="true" src="~/js/jquery-3.3.1.min.js"></script>
+
     <script asp-append-version="true" src="~/js/bootstrap.min.js"></script>
 
     <script asp-append-version="true" src="~/js/jquery.magnific-popup.min.js"></script>
@@ -57,6 +64,7 @@
     <script src="_framework/blazor.server.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
-    
+
+
 </body>
 </html>

@@ -1,0 +1,17 @@
+﻿@inject IJSRuntime JSRuntime
+
+
+@code {
+    [Parameter]
+    public string PageTitle { get; set; } = "";
+
+    protected override void OnParametersSet()
+    {
+        SetTitle(PageTitle);
+    }
+
+    private async void SetTitle(string title)
+    {
+        await JSRuntime.InvokeVoidAsync("setDocumentTitle", title);
+    }
+}

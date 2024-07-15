@@ -77,8 +77,12 @@ namespace Owls.Areas.Admin.Controllers
         {
             ViewBag.Nav = "Orders";
 
-            var rs = await _storeContext.Orders.Include(o => o.OrderDetails).ThenInclude(od => od.ProductVariant).ThenInclude(od => od.Product).FirstOrDefaultAsync(o => o.OrderId == orderId);
-            if (rs == null) return RedirectToAction("Index");
+            var rs = await _storeContext.Orders
+                .Include(o => o.Voucher)
+                .Include(o => o.OrderDetails).ThenInclude(od => od.ProductVariant).ThenInclude(od => od.Product)
+                .FirstOrDefaultAsync(o => o.OrderId == orderId);
+            if (rs == null)
+                return RedirectToAction("Index");
             ViewBag.Status = new SelectList(OrderStatus.Status, "Value", "Value");
 
             foreach (var d in rs.OrderDetails)
@@ -94,7 +98,8 @@ namespace Owls.Areas.Admin.Controllers
         public async Task<IActionResult> Details(Order o)
         {
             Order order = await _storeContext.Orders.FindAsync(o.OrderId);
-            if (order == null) return RedirectToAction("Index");
+            if (order == null)
+                return RedirectToAction("Index");
             order.Status = o.Status;
             order.IsPaid = o.IsPaid;
             order.UpdateAt = DateTime.Now;

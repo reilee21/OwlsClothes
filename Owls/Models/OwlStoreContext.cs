@@ -16,6 +16,9 @@ namespace Owls.Models
         public virtual DbSet<ProductImage> ProductImages { get; set; } = null!;
         public virtual DbSet<ProductVariant> ProductVariants { get; set; } = null!;
         public virtual DbSet<ShippingFee> ShippingFees { get; set; } = null!;
+        public virtual DbSet<Voucher> Vouchers { get; set; } = null!;
+        public virtual DbSet<Promotion> Promotions { get; set; } = null!;
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -33,7 +36,6 @@ namespace Owls.Models
                                              .HasForeignKey(e => e.OrderId)
                                              .IsRequired();
             });
-
 
 
             modelBuilder.Entity<ShippingFee>().HasData(
