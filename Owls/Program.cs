@@ -20,19 +20,20 @@ builder.Services.AddBlazoredToast();
 
 builder.Services.AddDbContext<OwlStoreContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Db"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Dpl"));
 });
 
 builder.Services.AddDbContext<OwlsIdentityContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Db"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Dpl"));
 });
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddIdentity<OwlsUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                                                     .AddEntityFrameworkStores<OwlsIdentityContext>()
-                                                    .AddDefaultTokenProviders(); ;
+                                                    .AddDefaultTokenProviders();
+;
 
 var app = builder.Build();
 
