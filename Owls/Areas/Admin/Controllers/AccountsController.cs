@@ -12,7 +12,6 @@ namespace Owls.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = "admin")]
-
     public class AccountsController : Controller
     {
         private readonly OwlStoreContext owlStoreContext;
@@ -120,7 +119,8 @@ namespace Owls.Areas.Admin.Controllers
         public async Task<IActionResult> UpdateAccount(string id, AccountWrite account)
         {
             var user = await userManager.FindByIdAsync(id);
-            if (user == null) { return NotFound(); }
+            if (user == null)
+            { return NotFound(); }
             var r = await userManager.GetRolesAsync(user);
             account.Password = id;
             if (ModelState.IsValid)
@@ -156,7 +156,8 @@ namespace Owls.Areas.Admin.Controllers
         public async Task<IActionResult> GetAccount(string id)
         {
             var u = await userManager.FindByIdAsync(id);
-            if (u == null) { return NotFound(); }
+            if (u == null)
+            { return NotFound(); }
             var roles = await userManager.GetRolesAsync(u);
 
             LocationService location = new LocationService();
@@ -166,8 +167,6 @@ namespace Owls.Areas.Admin.Controllers
             u.Dicstrict = location.GetDistrictId(city, u.Dicstrict);
 
             u.City = location.GetCityId(city);
-
-
 
             return Ok(new
             {

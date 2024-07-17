@@ -286,22 +286,15 @@ namespace Owls.Areas.Admin.Controllers
                 {
                     return BadRequest(new { message = "Không thể xoá. Hãy chuyển sang ngừng bán" });
                 }
-
                 _storeContext.ProductVariants.RemoveRange(product.ProductVariants);
-
                 foreach (var item in product.ProductImages)
                 {
                     await firebaseStorage.RemoveImageAsync(item.Name);
                 }
-
                 _storeContext.ProductImages.RemoveRange(product.ProductImages);
-
                 _storeContext.Products.Remove(product);
-
                 await _storeContext.SaveChangesAsync();
-
                 await transaction.CommitAsync();
-
                 return Ok(new { redirectToUrl = Url.Action("Index") });
             }
             catch (Exception ex)

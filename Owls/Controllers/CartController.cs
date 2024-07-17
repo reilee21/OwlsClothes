@@ -133,10 +133,10 @@ namespace Owls.Controllers
             };
 
             var cart = await GetCart();
-            /* if (!cart.Any())
-             {
-                 return RedirectToAction("Index", "Home");
-             }*/
+            if (!cart.Any())
+            {
+                return RedirectToAction("Index", "Home");
+            }
             await SetImg(cart);
             var colors = await colorRepos.GetColors();
             var ship = await context.ShippingFees.Select(p => new { p.City, p.Fee }).ToListAsync();
@@ -194,10 +194,6 @@ namespace Owls.Controllers
                 return BadRequest("Voucher không còn sử dụng được");
             return Ok(rs);
         }
-
-
-
-
 
 
         private async Task<double> GetTotal()

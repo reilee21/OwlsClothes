@@ -23,11 +23,7 @@ namespace Owls.Areas.Admin.Controllers
             ViewBag.Nav = "Dashboard";
             return View();
         }
-        [Route("/api/Demo")]
-        public IActionResult Demo()
-        {
-            return Ok("123");
-        }
+
         [Route("/api/GetRevenueByTime")]
         public async Task<IActionResult> GetRevenue(DateTime from, DateTime to, string range)
         {
@@ -111,9 +107,6 @@ namespace Owls.Areas.Admin.Controllers
         {
             return ViewComponent("NewOrders", new { page, pageSize, today });
         }
-
-
-
 
     }
 }

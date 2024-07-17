@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Owls.DTOs;
@@ -7,7 +8,7 @@ using Owls.Models;
 namespace Owls.Areas.Admin.Controllers
 {
     [Area("Admin")]
-
+    [Authorize(Roles = "admin")]
     public class PromotionController : Controller
     {
         private readonly OwlStoreContext context;

@@ -20,12 +20,12 @@ builder.Services.AddBlazoredToast();
 
 builder.Services.AddDbContext<OwlStoreContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Dpl"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Db"));
 });
 
 builder.Services.AddDbContext<OwlsIdentityContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Dpl"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Db"));
 });
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

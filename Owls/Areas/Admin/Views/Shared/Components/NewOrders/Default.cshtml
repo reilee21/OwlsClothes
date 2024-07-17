@@ -12,7 +12,6 @@
             else
             {
                 <h5 class="w-20">Đơn hàng hôm nay: @ViewBag.Pager?.TotalItems</h5>
-
             }
             <div>
                 <button class="btn bg-gradient-dark" onclick="loadPage(1, 0)">Hôm nay</button>
@@ -36,7 +35,6 @@
                             </tr>
                         </thead>
                         @await Html.PartialAsync("_Order", Model)
-
                     </table>
                 </div>
             </div>
@@ -54,7 +52,6 @@
             </div>
 
         }
-
 
     </div>
 </div>

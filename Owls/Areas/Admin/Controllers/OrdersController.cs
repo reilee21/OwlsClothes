@@ -25,10 +25,23 @@ namespace Owls.Areas.Admin.Controllers
             colorRepos = color;
         }
 
-        public async Task<IActionResult> Index(int? page, DateTime? from, DateTime? to)
+        public async Task<IActionResult> Index(string? search, int? page, DateTime? from, DateTime? to)
         {
             ViewBag.Nav = "Orders";
             var qr = _storeContext.Orders.AsQueryable();
+            if (!string.IsNullOrEmpty(search))
+            {
+                string value = search.Trim().ToUpper();
+                if (value.Length > 1)
+                {
+                    qr = qr.Where(o => o.OrderId.ToUpper() == value
+                                                || o.CustomerName.ToUpper().Contains(value)
+                                                || o.CustomerPhone.Equals(value));
+                    ViewBag.Search = search;
+
+                }
+
+            }
             if (from != null && to != null && DateTime.Compare((DateTime)from, (DateTime)to) > 0)
             {
                 DateTime temp = (DateTime)from;
@@ -44,6 +57,7 @@ namespace Owls.Areas.Admin.Controllers
                 DateTime d = (DateTime)to;
                 qr = qr.Where(o => o.CreateAt < d.AddDays(1));
             }
+
             int pageNumber = page ?? 1;
             int pageSize = 10;
             var pagedOrders = await qr
@@ -63,15 +77,7 @@ namespace Owls.Areas.Admin.Controllers
             ViewBag.To = to;
             return View(pagedOrders);
         }
-        [HttpGet]
-        public IActionResult Search(string orderId)
-        {
-            ViewBag.Nav = "Orders";
 
-            var rs = _storeContext.Orders.Where(o => o.OrderId == orderId);
-
-            return View("Index", rs);
-        }
         [HttpGet]
         public async Task<IActionResult> Details(string orderId)
         {
@@ -88,6 +94,8 @@ namespace Owls.Areas.Admin.Controllers
             foreach (var d in rs.OrderDetails)
             {
                 string i = d.ProductVariant.Product.Imagethumbnail;
+                if (i.Contains("firebase"))
+                    continue;
                 d.ProductVariant.Product.Imagethumbnail = await firebase.GetImageStreamAsync(i);
             }
             ViewBag.Colors = await colorRepos.GetColors();

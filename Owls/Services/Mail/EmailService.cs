@@ -12,7 +12,6 @@ namespace Owls.Services.Mail
         {
             _emailSettings = emailSettings.Value;
         }
-
         public async Task SendEmailAsync(string toAddress, string subject, string body)
         {
             try
