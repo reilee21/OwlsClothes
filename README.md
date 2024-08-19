@@ -1,48 +1,21 @@
 # Owls
 
-![99%](https://progress-bar.dev/99)
 
-
-
-## Progress
+## Desciption
 ```bash
-
-Account 
-- Regis =>  done
-- Login => done
-- Logout =>  done
-- Profile =>  done
+Features
 User
-- Cart => done
-- Checkout (apply Voucher)=>  done
-- Online payment => done
-- Get User orders => order details =>  done
-
-Product
-- Searching =>  done
-- Filter =>  done
-
-
-----------------
+- Account Management: Register, Login, Logout, Update profile.
+- Shopping: Cart management, Checkout, Apply vouchers, Online payment, View order history and details.
+- Product Search & Filter: Search and filter products by criteria.
 Admin
-- Product CRUD => done
-
-- Account 
---- Account Admin =>  done | Add accout => done
---- Account User =>  done  | Edit account => done
-	
-- Orders (list => detail =>update(status)) =>  done
-
-- Others
---- ShippingFee Edit => done
---- Color CRUD => done
-- Discount
---- Voucher => CRUD 
---- Promotion => CRUD
-- Profile | show + update => done
-- ChangePass by email => done
-
-- DashBoard => done
---------
-Authorization  =>  done
+-Product Management: CRUD operations for products.
+-Account Management: Manage Admin and User accounts, edit user information.
+- Order Management: View order list, order details, and update order status.
+- Others: Manage shipping fees, product colors.
+- Discount Management: CRUD for Vouchers and Promotions.
+- Admin Profile: View and update profile, change password by email.
+- Dashboard: Comprehensive stats and platform management.
+Security
+- Authorization: Role-based access control system.
 ```
